@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { LayoutDashboard, Users, CalendarDays, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, CalendarDays, LogOut, Wallet, FolderKanban } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -11,78 +11,51 @@ import {
 } from "@/components/ui/collapsible";
 import {
   Package,
+  Archive,
   ShoppingCart,
   Calculator,
   Truck,
   UserCog,
   UserCircle,
   Settings,
-  BadgeEuro,
-  BookOpen,
-  Book,
   FileText,
-  ClipboardList,
-  CalendarCheck,
-  Landmark,
-  Archive,
+  Building2,
+  Network,
 } from "lucide-react";
 
 import { ChevronDown } from "lucide-react";
 
 const menuItems = [
   {
-    text: "dashboard",
+    text: "Dashboard",
     icon: <LayoutDashboard className="h-5 w-5" />,
     href: "/dashboard",
   },
   {
-    text: "depenses",
-    icon: <Package className="h-5 w-5" />,
+    text: "Dépenses",
+    icon: <Wallet className="h-5 w-5" />,
     subItems: [
       {
-        text: "Tous les produits",
-        icon: <Package className="h-5 w-5" />,
-        href: "/Dashboard/produits/list",
+        text: "Toutes les dépenses",
+        icon: <Wallet className="h-5 w-5" />,
+        href: "/dashboard/depenses/listdepenses",
       },
       {
-        text: "Catégories",
+        text: "Catégories de dépenses",
         icon: <Archive className="h-5 w-5" />,
-        href: "/Dashboard/produits/category",
+        href: "/dashboard/depenses/categories",
       },
     ],
+  },
+  {
+    text: "Services",
+    icon: <Building2 className="h-5 w-5" />,
+     href: "/dashboard/service",
   },
   {
     text: "Projets",
-    icon: <ShoppingCart className="h-5 w-5" />,
+    icon: <FolderKanban className="h-5 w-5" />,
     href: "/dashboard/projets",
-  },
-  {
-    text: "comptabilite",
-    icon: <Calculator className="h-5 w-5" />,
-    subItems: [
-      { text: "Exercices comptable", href: "/Dashboard/comptab/exercice" },
-      { text: "Plan comptable", href: "/Dashboard/comptab/plan" },
-      { text: "Journaux comptable", href: "/Dashboard/comptab/journaux" },
-      { text: "Grand livre", href: "/Dashboard/comptab/livre" },
-      { text: "Bilan", href: "/Dashboard/comptab/bilan" },
-      {
-        text: "Periodes & clôtures",
-        href: "/Dashboard/comptab/cloture",
-      },
-      { text: "Immobilisation", href: "/Dashboard/comptab/immobilisation" },
-    ],
-  },
-  {
-    text: "Clients",
-    icon: <Users className="h-5 w-5" />,
-    subItems: [
-      { text: "Liste des clients", href: "/Dashboard/clients/list" },
-      { text: "Importer liste clients", href: "/Dashboard/clients/import" },
-      {
-        text: "Demande crédit",
-        href: "/Dashboard/clients/credit",
-      },
-    ],
   },
   {
     text: "Fournisseurs",
@@ -90,26 +63,35 @@ const menuItems = [
     href: "/dashboard/fournisseurs",
   },
   {
+    text: "Rapports",
+    icon: <FileText className="h-5 w-5" />,
+    subItems: [
+      { text: "Rapport dépenses", href: "/dashboard/rapports/depenses" },
+      { text: "Rapport projets", href: "/dashboard/rapports/projets" },
+    ],
+  },
+  {
+    text: "Comptabilité",
+    icon: <Calculator className="h-5 w-5" />,
+    subItems: [
+      { text: "Plan comptable", href: "/dashboard/comptabilite/plan" },
+      { text: "Bilan", href: "/dashboard/comptabilite/bilan" },
+    ],
+  },
+  {
     text: "Utilisateurs",
     icon: <UserCog className="h-5 w-5" />,
-    href: "/Dashboard/utilisateur",
+    href: "/dashboard/utilisateurs",
   },
   {
     text: "Mon compte",
     icon: <UserCircle className="h-5 w-5" />,
-    href: "/Dashboard/profile",
+    href: "/dashboard/profile",
   },
   {
-    text: "Paramètre",
+    text: "Paramètres",
     icon: <Settings className="h-5 w-5" />,
-    href: "/adminseting",
-    subItems: [
-      { text: "Rôle", href: "/adminseting/role" },
-      { text: "Permission", href: "/adminseting/permission" },
-      { text: "Pays", href: "/adminseting/pays" },
-      { text: "Rubrique Comptable", href: "/adminseting/rubrique" },
-      { text: "Département", href: "/adminseting/departement" },
-    ],
+    href: "/dashboard/parametres",
   },
 ];
 

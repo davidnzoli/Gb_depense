@@ -21,22 +21,19 @@ import Pagination from "@/components/pagination";
 import { Trash, Edit } from "lucide-react";
 import AddExpense from "@/components/popups/addNews/addExpense";
 import AddService from "@/components/popups/addNews/addService";
-import AddSupplier from "@/components/popups/addNews/addSupplier";
 // import UpdatedCategory from "@/components/updateCategory";
 
-interface ItemsFournisseur {
+interface ItemsService {
   id: string;
-  name    :  string
-  contact :  string
-  email     :string
-  nationalite :string
+  name   :   string;
+  companyId  : string; 
   createdAt:string
 }
 
-export default function ListeFouirnisseurs() {
+export default function lIsteservice() {
   const [open, setOpen] = React.useState(false);
   const [opens, setOpens] = React.useState(false);
-  const [fournisseur, setFournisseur] = useState<ItemsFournisseur[]>([]);
+  const [services, setServices] = useState<ItemsService[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(7);
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
@@ -47,12 +44,12 @@ export default function ListeFouirnisseurs() {
 
 
 
-  const totalCategories = fournisseur.length;
+  const totalCategories = services.length;
   const totalPages = Math.ceil(totalCategories / categoriesPerPage);
 
   const indexOfLastCategory = currentPage * categoriesPerPage;
   const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
-  const currentCategories = fournisseur.slice(
+  const currentCategories = services.slice(
     indexOfFirstCategory,
     indexOfLastCategory
   );
@@ -61,16 +58,16 @@ export default function ListeFouirnisseurs() {
     setCurrentPage(pageNumber);
   };
 
-  const [allUsers, setAllUsers] = useState(fournisseur);
+  const [allUsers, setAllUsers] = useState(services);
 
   const handleDelete = (id: string) => {
-    setAllUsers((prev) => prev.filter((fournisseur) => fournisseur.id !== id));
+    setAllUsers((prev) => prev.filter((service) => service.id !== id));
   };
 
   async function fetchServices() {
-      const res = await fetch("/api/suppliers");
+      const res = await fetch("/api/services");
       const resulta = await res.json();
-      setFournisseur(resulta.data);
+      setServices(resulta.data);
     }
   
   useEffect(() => {
@@ -94,7 +91,7 @@ export default function ListeFouirnisseurs() {
           <Input
             type="text"
             className="w-70"
-            placeholder="Filtrer par le email de fournisseur"
+            placeholder="Filtrer par nom des services"
           />
         </div>
         <div className="flex justify-center items-center gap-2">
@@ -108,7 +105,7 @@ export default function ListeFouirnisseurs() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </DialogTrigger>
-            <AddSupplier onClosed={() => setOpens(false)} />
+            <AddService onClosed={() => setOpens(false)} />
           </Dialog>
         </div>
       </div>
@@ -116,25 +113,21 @@ export default function ListeFouirnisseurs() {
         <TableHeader>
           <TableRow>
             <TableHead className="font-medium">Id</TableHead>
-            <TableHead className="font-medium"> Email</TableHead>
-            <TableHead className="font-medium"> Phone</TableHead>
+            <TableHead className="font-medium">service</TableHead>
             <TableHead className="font-center">Creation</TableHead>
             <TableHead className="text-center">ACTIONS</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {currentCategories && currentCategories.length > 0 ? (
-            currentCategories.map((fournisseur) => (
-              <TableRow key={fournisseur.id}>
-                <TableCell>{fournisseur.id}</TableCell>
+            currentCategories.map((service) => (
+              <TableRow key={service.id}>
+                <TableCell>{service.id}</TableCell>
                 <TableCell className="text-left">
-                  {fournisseur.email}
+                  {service.name}
                 </TableCell>
                 <TableCell className="text-left">
-                  {fournisseur.contact}
-                </TableCell>
-                <TableCell className="text-left">
-                  {fournisseur.createdAt}
+                  {service.createdAt}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="text-center flex items-center justify-center gap-2">
@@ -142,11 +135,10 @@ export default function ListeFouirnisseurs() {
                       categoryId={categorie.id}
                       onDeletes={handleDelete}
                     /> */}
-                    
                     <Button
                       variant="outline"
                       onClick={() => {
-                        setSelectedServiceId(fournisseur.id);
+                        setSelectedServiceId(service.id);
                         setOpen(true);
                       }}
                       className="flex items-center cursor-pointer space-x-2"
@@ -154,15 +146,15 @@ export default function ListeFouirnisseurs() {
                       <Edit className="h-5 w-5 text-blue-500" />
                     </Button>
                     <Button
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedServiceId(fournisseur.id);
-                        setOpen(true);
-                      }}
-                      className="flex items-center cursor-pointer space-x-2"
-                    >
-                      <Trash className="h-5 w-5 text-red-500" />
-                    </Button>
+                        variant="outline"
+                                          onClick={() => {
+                                            setSelectedServiceId(service.id);
+                                            setOpen(true);
+                                          }}
+                                          className="flex items-center cursor-pointer space-x-2"
+                                        >
+                                          <Trash className="h-5 w-5 text-red-500" />
+                                        </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -170,7 +162,7 @@ export default function ListeFouirnisseurs() {
           ) : (
             <TableRow>
               <TableCell colSpan={3} className="text-center">
-                Aucun fournisseur trouvé
+                Aucune depense trouvée
               </TableCell>
             </TableRow>
           )}

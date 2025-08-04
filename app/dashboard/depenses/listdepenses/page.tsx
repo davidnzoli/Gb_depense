@@ -20,39 +20,55 @@ import { ArrowRight } from "lucide-react";
 import Pagination from "@/components/pagination";
 import { Trash, Edit } from "lucide-react";
 import AddExpense from "@/components/popups/addNews/addExpense";
-import AddService from "@/components/popups/addNews/addService";
-import AddSupplier from "@/components/popups/addNews/addSupplier";
 // import UpdatedCategory from "@/components/updateCategory";
 
-interface ItemsFournisseur {
+interface ItemsDepense {
   id: string;
-  name    :  string
-  contact :  string
-  email     :string
-  nationalite :string
-  createdAt:string
+  date: string;
+  libelle :  string;
+  rubrique : string;
+  beneficiaire : string;
+  amount    :  string;
+  supplier : string
 }
 
-export default function ListeFouirnisseurs() {
+export default function listeDepenses() {
   const [open, setOpen] = React.useState(false);
   const [opens, setOpens] = React.useState(false);
-  const [fournisseur, setFournisseur] = useState<ItemsFournisseur[]>([]);
+  const [depenses, setDepenses] = useState<ItemsDepense[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(7);
-  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
 
-  
+  async function fetchDepenses() {
+    const res = await fetch("/api/expenses");
+    const resulta = await res.json();
+    setDepenses(resulta.data);
+  }
+
+useEffect(() => {
+  fetchDepenses();
+
+  const handleExpenseAdded = () => {
+    fetchDepenses();
+  };
+
+  window.addEventListener("expenseAdded", handleExpenseAdded);
+
+  return () => {
+    window.removeEventListener("expenseAdded", handleExpenseAdded);
+  };
+}, []);
 
 
-
-  const totalCategories = fournisseur.length;
+  const totalCategories = depenses.length;
   const totalPages = Math.ceil(totalCategories / categoriesPerPage);
 
   const indexOfLastCategory = currentPage * categoriesPerPage;
   const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
-  const currentCategories = fournisseur.slice(
+  const currentCategories = depenses.slice(
     indexOfFirstCategory,
     indexOfLastCategory
   );
@@ -61,40 +77,20 @@ export default function ListeFouirnisseurs() {
     setCurrentPage(pageNumber);
   };
 
-  const [allUsers, setAllUsers] = useState(fournisseur);
+  const [allUsers, setAllUsers] = useState(depenses);
 
   const handleDelete = (id: string) => {
-    setAllUsers((prev) => prev.filter((fournisseur) => fournisseur.id !== id));
+    setAllUsers((prev) => prev.filter((depense) => depense.id !== id));
   };
 
-  async function fetchServices() {
-      const res = await fetch("/api/suppliers");
-      const resulta = await res.json();
-      setFournisseur(resulta.data);
-    }
-  
-  useEffect(() => {
-    fetchServices();
-  
-    const handleExpenseAdded = () => {
-      fetchServices();
-    };
-  
-    window.addEventListener("expenseAdded", handleExpenseAdded);
-  
-    return () => {
-      window.removeEventListener("expenseAdded", handleExpenseAdded);
-    };
-  }, []);
-  
   return (
     <>
       <div className="flex h-16 bg-white p-9 mb-1 justify-between items-center gap-3.5">
         <div className="flex justifyßß-center items-center gap-2">
           <Input
-            type="text"
+            type="category"
             className="w-70"
-            placeholder="Filtrer par le email de fournisseur"
+            placeholder="Filtrer par nom de categorie"
           />
         </div>
         <div className="flex justify-center items-center gap-2">
@@ -108,33 +104,41 @@ export default function ListeFouirnisseurs() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </DialogTrigger>
-            <AddSupplier onClosed={() => setOpens(false)} />
+            <AddExpense onClosed={() => setOpens(false)} />
           </Dialog>
         </div>
       </div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="font-medium">Id</TableHead>
-            <TableHead className="font-medium"> Email</TableHead>
-            <TableHead className="font-medium"> Phone</TableHead>
-            <TableHead className="font-center">Creation</TableHead>
+            <TableHead className="font-medium">Date</TableHead>
+            <TableHead className="font-medium">Rubrique</TableHead>
+            <TableHead className="font-center">Montant</TableHead>
+            <TableHead className="font-medium">Libelle</TableHead>
+            <TableHead className="text-right font-medium">Beneficiaire</TableHead>
+            <TableHead className="text-right font-medium">Fournisseur</TableHead>
             <TableHead className="text-center">ACTIONS</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {currentCategories && currentCategories.length > 0 ? (
-            currentCategories.map((fournisseur) => (
-              <TableRow key={fournisseur.id}>
-                <TableCell>{fournisseur.id}</TableCell>
+            currentCategories.map((depense) => (
+              <TableRow key={depense.id}>
+                <TableCell>{depense.date}</TableCell>
                 <TableCell className="text-left">
-                  {fournisseur.email}
+                  {depense.rubrique}
                 </TableCell>
                 <TableCell className="text-left">
-                  {fournisseur.contact}
+                  {depense.amount}
                 </TableCell>
                 <TableCell className="text-left">
-                  {fournisseur.createdAt}
+                  {depense.libelle}
+                </TableCell>
+                <TableCell className="text-left">
+                  {depense.beneficiaire}
+                </TableCell>
+                <TableCell className="text-left">
+                  {depense.supplier}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="text-center flex items-center justify-center gap-2">
@@ -142,11 +146,10 @@ export default function ListeFouirnisseurs() {
                       categoryId={categorie.id}
                       onDeletes={handleDelete}
                     /> */}
-                    
                     <Button
                       variant="outline"
                       onClick={() => {
-                        setSelectedServiceId(fournisseur.id);
+                        setSelectedCategoryId(depense.id);
                         setOpen(true);
                       }}
                       className="flex items-center cursor-pointer space-x-2"
@@ -154,15 +157,15 @@ export default function ListeFouirnisseurs() {
                       <Edit className="h-5 w-5 text-blue-500" />
                     </Button>
                     <Button
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedServiceId(fournisseur.id);
-                        setOpen(true);
-                      }}
-                      className="flex items-center cursor-pointer space-x-2"
-                    >
-                      <Trash className="h-5 w-5 text-red-500" />
-                    </Button>
+                                            variant="outline"
+                                                              onClick={() => {
+                                                                setSelectedCategoryId(depense.id);
+                                                                setOpen(true);
+                                                              }}
+                                                              className="flex items-center cursor-pointer space-x-2"
+                                                            >
+                                                              <Trash className="h-5 w-5 text-red-500" />
+                                                            </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -170,7 +173,7 @@ export default function ListeFouirnisseurs() {
           ) : (
             <TableRow>
               <TableCell colSpan={3} className="text-center">
-                Aucun fournisseur trouvé
+                Aucune depense trouvée
               </TableCell>
             </TableRow>
           )}
