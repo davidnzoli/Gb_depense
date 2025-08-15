@@ -76,6 +76,7 @@ const menuItems = [
     subItems: [
       { text: "Plan comptable", href: "/dashboard/comptabilite/plan" },
       { text: "Bilan", href: "/dashboard/comptabilite/bilan" },
+      { text: "Rubrique comptable", href: "/dashboard/comptabilite/rubrique" },
     ],
   },
   {

@@ -29,16 +29,19 @@ import { SelectViewport } from "@radix-ui/react-select";
 
 interface Expenses {
   id: string;
-   libelle: string;
-  rubrique : string;
-  beneficiaire : string;
-  amount : string;
-  userId    :  string;
-  supplierId : string;
-  projectId  : string;
-  serviceId :  string;
+  libelle: string;
+  rubriqueId: string;
+  beneficiaire: string;
+  amount: string;
+  userId: string;
+  supplierId: string;
+  projectId: string ;
+  serviceId: string;
+  rubriqueName: string;
+  serviceName?: string ;  
+  projectName?: string ;  
+  supplierName?: string; 
 }
-
 interface AddDataDialogContent {
   onClosed: () => void;
 }
@@ -167,10 +170,10 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
                 {Expense.map((cat) => (
                   <SelectItem
                     key={cat.id}
-                    value={cat.serviceId}
+                    value={cat.id || ""}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                    {cat.serviceId}
+                    {cat.serviceName || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>
@@ -179,9 +182,9 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
         </div>
          <div className="grid gap-2">
           <Select
-            value={formData.serviceId}
+            value={formData.projectId}
             onValueChange={(val) =>
-              setFormData((prev) => ({ ...prev, serviceId: val }))
+              setFormData((prev) => ({ ...prev, projectId: val }))
             }
           >
             <SelectTrigger id="projectId" className="w-full">
@@ -192,10 +195,10 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
                 {Expense.map((cat) => (
                   <SelectItem
                     key={cat.id}
-                    value={cat.projectId}
+                    value={cat.id}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                    {cat.projectId}
+                    {cat.projectId || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>
@@ -203,33 +206,20 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
           </Select>
         </div>
         <div className="grid gap-2">
-          <Select
+          <Label htmlFor="libele">Libelle</Label>
+          <Input
+            id="libelle"
+            name="libelle"
+            type="text"
             value={formData.libelle}
-            onValueChange={(val) =>
-              setFormData((prev) => ({ ...prev, libelle: val }))
-            }
-          >
-            <SelectTrigger id="libelle" className="w-full">
-              <SelectValue placeholder="Sélectionner un libelle" />
-            </SelectTrigger>
-            <SelectContent className="w-full">
-              <SelectViewport className="max-h-60 overflow-y-auto">
-                {Expense.map((cat) => (
-                  <SelectItem
-                    key={cat.id}
-                    value={cat.libelle}
-                    className="hover:bg-green-500 hover:text-white"
-                  >
-                    {cat.libelle}
-                  </SelectItem>
-                ))}
-              </SelectViewport>
-            </SelectContent>
-          </Select>
+            onChange={handleChange}
+            placeholder="Payement outils de menage..."
+            required
+          />
         </div>
         <div className="grid gap-2">
           <Select
-            value={formData.libelle}
+            value={formData.rubrique}
             onValueChange={(val) =>
               setFormData((prev) => ({ ...prev, libelle: val }))
             }
@@ -242,10 +232,10 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
                 {Expense.map((cat) => (
                   <SelectItem
                     key={cat.id}
-                    value={cat.rubrique}
+                    value={cat.id}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                    {cat.rubrique}
+                    {cat.rubriqueName || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>
@@ -265,7 +255,7 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
           />
         </div>
 
-<div className="grid gap-2">
+          <div className="grid gap-2">
           <Select
             value={formData.supplierId}
             onValueChange={(val) =>
@@ -280,10 +270,10 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
                 {Expense.map((cat) => (
                   <SelectItem
                     key={cat.id}
-                    value={cat.supplierId}
+                    value={cat.id || ""}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                    {cat.supplierId}
+                   {cat.supplierName || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>
