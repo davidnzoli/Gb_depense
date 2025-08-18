@@ -63,7 +63,7 @@ model Project {
   clients       String?    // Lien vers un client s'il y en a
   userId      String?    // Responsable du projet (utilisateur)
   location       String?    // Localisation ou adresse du projet
-  status        ProjectStatus @default(PLANNED) // État du projet
+  status        ProjectStatus @default(PLANIFIE) // État du projet
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   expenses       Expense[]
@@ -74,17 +74,17 @@ model Project {
 
 }
 enum ProjectStatus {
-  PLANNED
-  IN_PROGRESS
-  COMPLETED
-  ON_HOLD
-  CANCELED
+  PLANIFIE        
+  EN_COURS        
+  TERMINE         
+  EN_ATTENTE      
+  ANNULE          
 }
  // budget         Float?     // Budget estimé
   // devisNumber    String?    // Référence de devis ou contrat
   // startDate      DateTime   @map("datedebut")
   // endDate        DateTime   @map("dateFin")
-  
+
 model Milestone {
   id          String   @id @default(cuid())       // Identifiant unique du jalon
   projectId   String                              // Référence au projet

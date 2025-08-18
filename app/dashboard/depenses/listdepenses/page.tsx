@@ -27,11 +27,11 @@ import DeleteExpense from "@/components/popups/deleteContent/deleteExpense";
 interface ItemsDepense {
   id: string;
   date: string;
-  libelle :  string;
-  rubrique : string;
-  beneficiaire : string;
-  amount    :  string;
-  supplier : string
+  libelle: string;
+  rubrique: string;
+  beneficiaire: string;
+  amount: string;
+  supplier: string;
 }
 
 interface ItemsSuplier {
@@ -60,60 +60,52 @@ export default function listeDepenses() {
   const [rubriques, setRubriques] = useState<ItemsRubrique[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(7);
-  const [selectedDepenseId, setSelectedDepenseId] = useState<string | null>(
-    null
-  );
+  const [selectedDepenseId, setSelectedDepenseId] = useState<string | null>(null);
 
   async function fetchDepenses() {
     const res = await fetch("/api/expenses");
     const resulta = await res.json();
 
     if (!resulta || !Array.isArray(resulta.data)) {
-        console.error("Structure inattendue:", resulta);
-         setDepenses([]);
-         setRubriques([]);
-         setServices([]);
-         setProjects([]);
-         setSuppliers([])
-        return;
-      }
+      console.error("Structure inattendue:", resulta);
+      setDepenses([]);
+      setRubriques([]);
+      setServices([]);
+      setProjects([]);
+      setSuppliers([]);
+      return;
+    }
     setDepenses(resulta.data);
     setRubriques(resulta.rubriques);
     setServices(resulta.services);
     setProjects(resulta.projects);
-    setSuppliers(resulta.suppliers)
+    setSuppliers(resulta.suppliers);
   }
 
-useEffect(() => {
-  fetchDepenses();
-
-  const handleExpenseAdded = () => {
+  useEffect(() => {
     fetchDepenses();
-  };
 
-  window.addEventListener("expenseAdded", handleExpenseAdded);
+    const handleExpenseAdded = () => {
+      fetchDepenses();
+    };
 
-  return () => {
-    window.removeEventListener("expenseAdded", handleExpenseAdded);
-  };
-}, []);
+    window.addEventListener("expenseAdded", handleExpenseAdded);
 
+    return () => {
+      window.removeEventListener("expenseAdded", handleExpenseAdded);
+    };
+  }, []);
 
   const totalCategories = depenses.length;
   const totalPages = Math.ceil(totalCategories / categoriesPerPage);
 
   const indexOfLastCategory = currentPage * categoriesPerPage;
   const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
-  const currentCategories = depenses.slice(
-    indexOfFirstCategory,
-    indexOfLastCategory
-  );
+  const currentCategories = depenses.slice(indexOfFirstCategory, indexOfLastCategory);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
-
- 
 
   const handleDelete = (id: string) => {
     setDepenses((prev) => prev.filter((depense) => depense.id !== id));
@@ -123,16 +115,10 @@ useEffect(() => {
     <>
       <div className="flex h-16 bg-white p-9 mb-1 justify-between items-center gap-3.5">
         <div className="flex justifyßß-center items-center gap-2">
-          <Input
-            type="category"
-            className="w-70"
-            placeholder="Filtrer par nom de categorie"
-          />
+          <Input type="category" className="w-70" placeholder="Filtrer par nom de categorie" />
         </div>
         <div className="flex justify-center items-center gap-2">
-          <Button className="bg-green-950 cursor-pointer flex items-center">
-            Appliquer
-          </Button>
+          <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
           <Dialog open={opens} onOpenChange={setOpens}>
             <DialogTrigger asChild>
               <Button className="bg-green-500 cursor-pointer flex items-center">
@@ -161,24 +147,14 @@ useEffect(() => {
             currentCategories.map((depense) => (
               <TableRow key={depense.id}>
                 <TableCell>{depense.date}</TableCell>
-                <TableCell className="text-left">
-                  {depense.rubrique}
-                </TableCell>
-                <TableCell className="text-left">
-                  {depense.amount}
-                </TableCell>
-                <TableCell className="text-left">
-                  {depense.libelle}
-                </TableCell>
-                <TableCell className="text-left">
-                  {depense.beneficiaire}
-                </TableCell>
-                <TableCell className="text-left">
-                  {depense.supplier}
-                </TableCell>
+                <TableCell className="text-left">{depense.rubrique}</TableCell>
+                <TableCell className="text-left">{depense.amount}</TableCell>
+                <TableCell className="text-left">{depense.libelle}</TableCell>
+                <TableCell className="text-left">{depense.beneficiaire}</TableCell>
+                <TableCell className="text-left">{depense.supplier}</TableCell>
                 <TableCell className="text-right">
                   <div className="text-center flex items-center justify-center gap-2">
-                                        {/* <Button
+                    {/* <Button
                                             variant="outline"
                                                               onClick={() => {
                                                                 setSelectedDepenseId(depense.id);
@@ -188,10 +164,7 @@ useEffect(() => {
                                                             >
                                                               <Trash className="h-5 w-5 text-red-500" />
                                                             </Button> */}
-                    <DeleteExpense
-                      id={depense.id}
-                      onDeletes={handleDelete}
-                    />
+                    <DeleteExpense id={depense.id} onDeletes={handleDelete} />
                     <Button
                       variant="outline"
                       onClick={() => {
@@ -228,11 +201,13 @@ useEffect(() => {
         </DialogContent>
       </Dialog>
       <div className="flex justify-center mt-2">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+        {depenses.length > 10 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
     </>
   );

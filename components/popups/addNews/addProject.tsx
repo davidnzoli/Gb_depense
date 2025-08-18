@@ -30,12 +30,12 @@ import { SelectViewport } from "@radix-ui/react-select";
 interface ItemsProjects {
   id: string;
   name: string;
-  description :  string;
-  serviceId : string;
-  clients : string;
-  userId    :  string;
-  location : string;
-  status : string;
+  description: string;
+  serviceId: string;
+  clients: string;
+  userId: string;
+  location: string;
+  status: string;
 }
 interface ItemsService {
   id: string;
@@ -54,14 +54,14 @@ export default function AddProject({ onClosed }: AddDataDialogContent) {
   const [Service, setServices] = React.useState<ItemsService[]>([]);
   const [User, setUsers] = React.useState<ItemsUser[]>([]);
   const [formData, setFormData] = React.useState({
-   id: "",
-   name: "",
-   description:"",
-   serviceId: "",
-   clients:"",
-   userId: "",
-   location:"",
-   status: "",
+    id: "",
+    name: "",
+    description: "",
+    serviceId: "",
+    clients: "",
+    userId: "",
+    location: "",
+    status: "",
   });
 
   async function fetchProject() {
@@ -73,7 +73,7 @@ export default function AddProject({ onClosed }: AddDataDialogContent) {
       if (!result || !Array.isArray(result.data)) {
         setProjects([]);
         setServices([]);
-        setUsers([])
+        setUsers([]);
         return;
       }
 
@@ -82,12 +82,12 @@ export default function AddProject({ onClosed }: AddDataDialogContent) {
       setUsers(result.users);
     } catch (error) {
       console.error("Erreur lors de la récupération des service:", error);
-        setProjects([]);
-        setServices([]);
-        setUsers([])
+      setProjects([]);
+      setServices([]);
+      setUsers([]);
     }
   }
-    useEffect(() => {
+  useEffect(() => {
     fetchProject();
   }, []);
 
@@ -118,32 +118,30 @@ export default function AddProject({ onClosed }: AddDataDialogContent) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      console.log(formData)
+      console.log(formData);
       if (!res.ok) {
         const err = await res.json();
-        console.log(err)
+        console.log(err);
         throw new Error(err.error || "Erreur lors de l'ajout de project");
       }
       if (res.status === 409) {
-        toast.error(
-          "Conflit de données : doublon détecté. Cette element existe déjà !"
-        );
-      }     
+        toast.error("Conflit de données : doublon détecté. Cette element existe déjà !");
+      }
       setFormData({
-         id: "",
-         name: "",
-         description:"",
-         serviceId: "",
-         clients:"",
-         userId: "",
-         location:"",
-         status: "",
-   });
+        id: "",
+        name: "",
+        description: "",
+        serviceId: "",
+        clients: "",
+        userId: "",
+        location: "",
+        status: "",
+      });
       onClosed();
       toast.success("Project ajoutée avec succès ✅");
       if (typeof window !== "undefined") {
-  window.dispatchEvent(new CustomEvent("expenseAdded"));
-}
+        window.dispatchEvent(new CustomEvent("expenseAdded"));
+      }
     } catch (error) {
       console.error("Erreur lors de l'ajout :", error);
       toast.error("Échec de l'ajout du project ❌");
@@ -174,36 +172,36 @@ export default function AddProject({ onClosed }: AddDataDialogContent) {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="description">Description</Label>
-          <Textarea name="description" id="description" 
-          value={formData.description}  
-          onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))
-  }/>
+          <Textarea
+            name="description"
+            id="description"
+            value={formData.description}
+            onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+          />
         </div>
         <div className="grid gap-2">
-                  <Select
-                    value={formData.serviceId}
-                    onValueChange={(val) =>
-                      setFormData((prev) => ({ ...prev, serviceId: val }))
-                    }
+          <Select
+            value={formData.serviceId}
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, serviceId: val }))}
+          >
+            <SelectTrigger id="serviceId" className="w-full">
+              <SelectValue placeholder="Sélectionner un service" />
+            </SelectTrigger>
+            <SelectContent className="w-full">
+              <SelectViewport className="max-h-60 overflow-y-auto">
+                {Service.map((cat) => (
+                  <SelectItem
+                    key={cat.id}
+                    value={cat.id || ""}
+                    className="hover:bg-green-500 hover:text-white"
                   >
-                    <SelectTrigger id="serviceId" className="w-full">
-                      <SelectValue placeholder="Sélectionner un service" />
-                    </SelectTrigger>
-                    <SelectContent className="w-full">
-                      <SelectViewport className="max-h-60 overflow-y-auto">
-                         {Service.map((cat) => (
-                          <SelectItem
-                            key={cat.id}
-                            value={cat.id || ""}
-                            className="hover:bg-green-500 hover:text-white"
-                          >
-                            {cat.name || "VIDE"}
-                          </SelectItem>
-                        ))}
-                      </SelectViewport>
-                    </SelectContent>
-                  </Select>
-                </div>
+                    {cat.name || "VIDE"}
+                  </SelectItem>
+                ))}
+              </SelectViewport>
+            </SelectContent>
+          </Select>
+        </div>
         <div className="grid gap-2">
           <Label htmlFor="clients">Nom de client</Label>
           <Input
@@ -229,30 +227,28 @@ export default function AddProject({ onClosed }: AddDataDialogContent) {
           />
         </div>
         <div className="grid gap-2">
-                  <Select
-                    value={formData.userId}
-                    onValueChange={(val) =>
-                      setFormData((prev) => ({ ...prev, userId: val }))
-                    }
+          <Select
+            value={formData.userId}
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, userId: val }))}
+          >
+            <SelectTrigger id="userId" className="w-full">
+              <SelectValue placeholder="Sélectionner un Agent de suivis" />
+            </SelectTrigger>
+            <SelectContent className="w-full">
+              <SelectViewport className="max-h-60 overflow-y-auto">
+                {User.map((cat) => (
+                  <SelectItem
+                    key={cat.id}
+                    value={cat.id || ""}
+                    className="hover:bg-green-500 hover:text-white"
                   >
-                    <SelectTrigger id="userId" className="w-full">
-                      <SelectValue placeholder="Sélectionner un Agent de suivis" />
-                    </SelectTrigger>
-                    <SelectContent className="w-full">
-                      <SelectViewport className="max-h-60 overflow-y-auto">
-                         {User.map((cat) => (
-                          <SelectItem
-                            key={cat.id}
-                            value={cat.id || ""}
-                            className="hover:bg-green-500 hover:text-white"
-                          >
-                            {cat.name || "VIDE"}
-                          </SelectItem>
-                        ))}
-                      </SelectViewport>
-                    </SelectContent>
-                  </Select>
-                </div>
+                    {cat.name || "VIDE"}
+                  </SelectItem>
+                ))}
+              </SelectViewport>
+            </SelectContent>
+          </Select>
+        </div>
         <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-end">
           <Button type="button" variant="outline" onClick={onClosed}>
             Annuler

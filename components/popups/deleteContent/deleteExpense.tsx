@@ -41,25 +41,20 @@ export default function DeleteExpense({
   return (
     <AlertDialog>
       <AlertDialogTrigger className="text-white ">
-       
-           <Trash className="h-5 w-5 items-center cursor-pointer space-x-2 text-red-500" />
-        
+        <Trash className="h-5 w-5 items-center cursor-pointer space-x-2 text-red-500" />
+
         {/* <Trash className="h-5 w-5 text-red-500" /> */}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
           <AlertDialogDescription className="">
-            Êtes-vous sûr de vouloir supprimer cette depense ? Cette action est
-            irréversible.
+            Êtes-vous sûr de vouloir supprimer cette depense ? Cette action est irréversible.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Annuler</AlertDialogCancel>
-          <AlertDialogAction
-            className="bg-red-500 text-white"
-            onClick={handleDeleteDepense}
-          >
+          <AlertDialogAction className="bg-red-500 text-white" onClick={handleDeleteDepense}>
             Confirmer
           </AlertDialogAction>
         </AlertDialogFooter>

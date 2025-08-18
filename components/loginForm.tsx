@@ -2,23 +2,14 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -77,16 +68,12 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="flex flex-col justify-center items-center gap-3">
-          <CardTitle className="text-[25px] text-green-500 font-bold">
-            Gb_Stock
-          </CardTitle>
-          <h1 className="text-black text-start font-bold text-[20px]">
-            Se connecter
-          </h1>
+          <CardTitle className="text-[25px] text-green-500 font-bold">Gb_Stock</CardTitle>
+          <h1 className="text-black text-start font-bold text-[20px]">Se connecter</h1>
           <CardDescription className="flex flex-col justify-center items-center gap-3">
             <span className="text-center">
-              Utilisez ce formulaire pour s'authentifier ou se connecter et
-              acceder dans votre espace en fonction de votre rôle et permission.{" "}
+              Utilisez ce formulaire pour s'authentifier ou se connecter et acceder dans votre
+              espace en fonction de votre rôle et permission.{" "}
             </span>
           </CardDescription>
         </CardHeader>
@@ -100,7 +87,7 @@ export function LoginForm({
                   type="email"
                   placeholder="Email"
                   value={email}
-                  onChange={(e : any) => setEmail(e.target.value)}
+                  onChange={(e: any) => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
@@ -110,7 +97,7 @@ export function LoginForm({
                   type="password"
                   placeholder="Mot de passe"
                   value={password}
-                  onChange={(e : any) => setPassword(e.target.value)}
+                  onChange={(e: any) => setPassword(e.target.value)}
                 />
               </div>
 

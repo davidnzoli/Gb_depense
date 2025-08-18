@@ -4,11 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 // import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { LayoutDashboard, Users, CalendarDays, LogOut, Wallet, FolderKanban } from "lucide-react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Package,
   Archive,
@@ -50,7 +46,7 @@ const menuItems = [
   {
     text: "Services",
     icon: <Building2 className="h-5 w-5" />,
-     href: "/dashboard/service",
+    href: "/dashboard/service",
   },
   {
     text: "Projets",

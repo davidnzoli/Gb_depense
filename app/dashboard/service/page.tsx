@@ -25,9 +25,9 @@ import AddService from "@/components/popups/addNews/addService";
 
 interface ItemsService {
   id: string;
-  name   :   string;
-  companyId  : string; 
-  createdAt:string
+  name: string;
+  companyId: string;
+  createdAt: string;
 }
 
 export default function lIsteservice() {
@@ -36,23 +36,14 @@ export default function lIsteservice() {
   const [services, setServices] = useState<ItemsService[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(7);
-  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
-    null
-  );
-
-  
-
-
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
 
   const totalCategories = services.length;
   const totalPages = Math.ceil(totalCategories / categoriesPerPage);
 
   const indexOfLastCategory = currentPage * categoriesPerPage;
   const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
-  const currentCategories = services.slice(
-    indexOfFirstCategory,
-    indexOfLastCategory
-  );
+  const currentCategories = services.slice(indexOfFirstCategory, indexOfLastCategory);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -65,39 +56,33 @@ export default function lIsteservice() {
   };
 
   async function fetchServices() {
-      const res = await fetch("/api/services");
-      const resulta = await res.json();
-      setServices(resulta.data);
-    }
-  
+    const res = await fetch("/api/services");
+    const resulta = await res.json();
+    setServices(resulta.data);
+  }
+
   useEffect(() => {
     fetchServices();
-  
+
     const handleExpenseAdded = () => {
       fetchServices();
     };
-  
+
     window.addEventListener("expenseAdded", handleExpenseAdded);
-  
+
     return () => {
       window.removeEventListener("expenseAdded", handleExpenseAdded);
     };
   }, []);
-  
+
   return (
     <>
       <div className="flex h-16 bg-white p-9 mb-1 justify-between items-center gap-3.5">
         <div className="flex justifyßß-center items-center gap-2">
-          <Input
-            type="text"
-            className="w-70"
-            placeholder="Filtrer par nom des services"
-          />
+          <Input type="text" className="w-70" placeholder="Filtrer par nom des services" />
         </div>
         <div className="flex justify-center items-center gap-2">
-          <Button className="bg-green-950 cursor-pointer flex items-center">
-            Appliquer
-          </Button>
+          <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
           <Dialog open={opens} onOpenChange={setOpens}>
             <DialogTrigger asChild>
               <Button className="bg-green-500 cursor-pointer flex items-center">
@@ -123,12 +108,8 @@ export default function lIsteservice() {
             currentCategories.map((service) => (
               <TableRow key={service.id}>
                 <TableCell>{service.id}</TableCell>
-                <TableCell className="text-left">
-                  {service.name}
-                </TableCell>
-                <TableCell className="text-left">
-                  {service.createdAt}
-                </TableCell>
+                <TableCell className="text-left">{service.name}</TableCell>
+                <TableCell className="text-left">{service.createdAt}</TableCell>
                 <TableCell className="text-right">
                   <div className="text-center flex items-center justify-center gap-2">
                     {/* <DeletePopupCategory
@@ -146,15 +127,15 @@ export default function lIsteservice() {
                       <Edit className="h-5 w-5 text-blue-500" />
                     </Button>
                     <Button
-                        variant="outline"
-                                          onClick={() => {
-                                            setSelectedServiceId(service.id);
-                                            setOpen(true);
-                                          }}
-                                          className="flex items-center cursor-pointer space-x-2"
-                                        >
-                                          <Trash className="h-5 w-5 text-red-500" />
-                                        </Button>
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedServiceId(service.id);
+                        setOpen(true);
+                      }}
+                      className="flex items-center cursor-pointer space-x-2"
+                    >
+                      <Trash className="h-5 w-5 text-red-500" />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

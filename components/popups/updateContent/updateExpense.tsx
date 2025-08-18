@@ -36,24 +36,24 @@ interface Expenses {
   amount: string;
   userId: string;
   supplierId: string;
-  projectId: string ;
+  projectId: string;
   serviceId: string;
   rubriqueName: string;
-  serviceName?: string ;  
-  projectName?: string ;  
-  supplierName?: string; 
+  serviceName?: string;
+  projectName?: string;
+  supplierName?: string;
 }
 interface supplierItems {
-id: string;
-  name    :  string
-  email     :string
+  id: string;
+  name: string;
+  email: string;
 }
 interface projectItems {
   id: string;
-  name  :    string
+  name: string;
 }
 interface serviceItems {
-    id: string;
+  id: string;
   name: string;
   campany: string;
 }
@@ -65,11 +65,7 @@ interface rubriqueItems {
   id: string;
   name: string;
 }
-export default function UpdatedExpense({
-  onClose,
-  id,
-  onUpdate,
-}: UpdateExpenseItemsProps) {
+export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseItemsProps) {
   const [Expense, setExpense] = React.useState<Expenses[]>([]);
   const [libelle, setlibelle] = React.useState("");
   const [rubrique, setrubrique] = React.useState("");
@@ -83,7 +79,7 @@ export default function UpdatedExpense({
   const [Projects, setProjects] = React.useState<projectItems[]>([]);
   const [Services, setServices] = React.useState<serviceItems[]>([]);
   const [Users, setUsers] = React.useState<userItems[]>([]);
-    const [Rubriques, setRubriques] = React.useState<rubriqueItems[]>([]);
+  const [Rubriques, setRubriques] = React.useState<rubriqueItems[]>([]);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -132,7 +128,7 @@ export default function UpdatedExpense({
           rubrique,
           beneficiaire,
           amount: parseFloat(amount),
-          userId:userIdItems,
+          userId: userIdItems,
           supplierId: supplierIdItems,
           projectId: projectIdItems,
           serviceId: serviceIdItems,
@@ -149,31 +145,31 @@ export default function UpdatedExpense({
   };
 
   async function fetchExpense() {
-      try {
-        const res = await fetch("/api/expenses");
-        const result = await res.json();
-        console.log("Réponse brute : ", result);
-  
-        if (!result || !Array.isArray(result.data)) {
-          console.error("Structure inattendue:", result);
-          setExpense([]);
-          return;
-        }
-  
-        setExpense(result.data);
-        setRubriques(result.rubriques);
-        setServices(result.services);
-        setProjects(result.projects);
-        setSuppliers(result.suppliers)
-      } catch (error) {
-        console.error("Erreur lors de la récupération des depense:", error);
+    try {
+      const res = await fetch("/api/expenses");
+      const result = await res.json();
+      console.log("Réponse brute : ", result);
+
+      if (!result || !Array.isArray(result.data)) {
+        console.error("Structure inattendue:", result);
         setExpense([]);
-        setRubriques([]);
-        setServices([]);
-        setProjects([]);
-        setSuppliers([])
+        return;
       }
+
+      setExpense(result.data);
+      setRubriques(result.rubriques);
+      setServices(result.services);
+      setProjects(result.projects);
+      setSuppliers(result.suppliers);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des depense:", error);
+      setExpense([]);
+      setRubriques([]);
+      setServices([]);
+      setProjects([]);
+      setSuppliers([]);
     }
+  }
 
   // async function fetchsupplierItems() {
   //   try {
@@ -213,24 +209,24 @@ export default function UpdatedExpense({
   //   }
   // }
 
-//   async function fetchprojectItems() {
-//     try {
-//       const res = await fetch("/api/projets");
-//       const result = await res.json();
-//       console.log("Réponse brute : ", result);
+  //   async function fetchprojectItems() {
+  //     try {
+  //       const res = await fetch("/api/projets");
+  //       const result = await res.json();
+  //       console.log("Réponse brute : ", result);
 
-//       if (!result || !Array.isArray(result.data)) {
-//         console.error("Structure inattendue:", result);
-//         setservice([]);
-//         return;
-//       }
+  //       if (!result || !Array.isArray(result.data)) {
+  //         console.error("Structure inattendue:", result);
+  //         setservice([]);
+  //         return;
+  //       }
 
-//       setservice(result.data);
-//     } catch (error) {
-//       console.error("Erreur lors de la récupération des projets:", error);
-//       setservice([]);
-//     }
-//   }
+  //       setservice(result.data);
+  //     } catch (error) {
+  //       console.error("Erreur lors de la récupération des projets:", error);
+  //       setservice([]);
+  //     }
+  //   }
   React.useEffect(() => {
     fetchExpense();
   }, []);
@@ -245,7 +241,6 @@ export default function UpdatedExpense({
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-
         <div className="grid gap-2">
           <Select
             value={serviceIdItems}
@@ -273,7 +268,7 @@ export default function UpdatedExpense({
           </Select>
         </div>
 
-      <div className="grid gap-2">
+        <div className="grid gap-2">
           <Select
             value={projectIdItems}
             onValueChange={(value) => {
@@ -299,7 +294,7 @@ export default function UpdatedExpense({
             </SelectContent>
           </Select>
         </div>
-         <div className="grid gap-2">
+        <div className="grid gap-2">
           <Select
             value={rubrique}
             onValueChange={(value) => {
@@ -314,18 +309,15 @@ export default function UpdatedExpense({
               <SelectViewport className="max-h-60 overflow-y-auto">
                 {Rubriques.map((cat) => (
                   <SelectItem
-                   
                     value={String(cat.name)}
                     className="hover:bg-green-500 hover:text-white"
-                  >
-                    
-                  </SelectItem>
+                  ></SelectItem>
                 ))}
               </SelectViewport>
             </SelectContent>
           </Select>
         </div>
-      <div className="grid gap-2 w-full">
+        <div className="grid gap-2 w-full">
           <Label htmlFor="libelle">libelle</Label>
           <Input
             id="libelle"
@@ -337,7 +329,7 @@ export default function UpdatedExpense({
             className="w-full"
           />
         </div>
-         <div className="grid gap-2 w-full">
+        <div className="grid gap-2 w-full">
           <Label htmlFor="amount">amount</Label>
           <Input
             id="amount"
@@ -349,7 +341,7 @@ export default function UpdatedExpense({
             className="w-full"
           />
         </div>
-         <div className="grid gap-2">
+        <div className="grid gap-2">
           <Select
             value={supplierIdItems}
             onValueChange={(value) => {
@@ -388,6 +380,3 @@ export default function UpdatedExpense({
     </DialogContent>
   );
 }
-
-
-

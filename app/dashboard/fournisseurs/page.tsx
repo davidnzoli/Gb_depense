@@ -26,11 +26,11 @@ import AddSupplier from "@/components/popups/addNews/addSupplier";
 
 interface ItemsFournisseur {
   id: string;
-  name    :  string
-  contact :  string
-  email     :string
-  nationalite :string
-  createdAt:string
+  name: string;
+  contact: string;
+  email: string;
+  nationalite: string;
+  createdAt: string;
 }
 
 export default function ListeFouirnisseurs() {
@@ -39,23 +39,14 @@ export default function ListeFouirnisseurs() {
   const [fournisseur, setFournisseur] = useState<ItemsFournisseur[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(7);
-  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
-    null
-  );
-
-  
-
-
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
 
   const totalCategories = fournisseur.length;
   const totalPages = Math.ceil(totalCategories / categoriesPerPage);
 
   const indexOfLastCategory = currentPage * categoriesPerPage;
   const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
-  const currentCategories = fournisseur.slice(
-    indexOfFirstCategory,
-    indexOfLastCategory
-  );
+  const currentCategories = fournisseur.slice(indexOfFirstCategory, indexOfLastCategory);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -68,39 +59,33 @@ export default function ListeFouirnisseurs() {
   };
 
   async function fetchServices() {
-      const res = await fetch("/api/suppliers");
-      const resulta = await res.json();
-      setFournisseur(resulta.data);
-    }
-  
+    const res = await fetch("/api/suppliers");
+    const resulta = await res.json();
+    setFournisseur(resulta.data);
+  }
+
   useEffect(() => {
     fetchServices();
-  
+
     const handleExpenseAdded = () => {
       fetchServices();
     };
-  
+
     window.addEventListener("expenseAdded", handleExpenseAdded);
-  
+
     return () => {
       window.removeEventListener("expenseAdded", handleExpenseAdded);
     };
   }, []);
-  
+
   return (
     <>
       <div className="flex h-16 bg-white p-9 mb-1 justify-between items-center gap-3.5">
         <div className="flex justifyßß-center items-center gap-2">
-          <Input
-            type="text"
-            className="w-70"
-            placeholder="Filtrer par le email de fournisseur"
-          />
+          <Input type="text" className="w-70" placeholder="Filtrer par le email de fournisseur" />
         </div>
         <div className="flex justify-center items-center gap-2">
-          <Button className="bg-green-950 cursor-pointer flex items-center">
-            Appliquer
-          </Button>
+          <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
           <Dialog open={opens} onOpenChange={setOpens}>
             <DialogTrigger asChild>
               <Button className="bg-green-500 cursor-pointer flex items-center">
@@ -127,22 +112,16 @@ export default function ListeFouirnisseurs() {
             currentCategories.map((fournisseur) => (
               <TableRow key={fournisseur.id}>
                 <TableCell>{fournisseur.id}</TableCell>
-                <TableCell className="text-left">
-                  {fournisseur.email}
-                </TableCell>
-                <TableCell className="text-left">
-                  {fournisseur.contact}
-                </TableCell>
-                <TableCell className="text-left">
-                  {fournisseur.createdAt}
-                </TableCell>
+                <TableCell className="text-left">{fournisseur.email}</TableCell>
+                <TableCell className="text-left">{fournisseur.contact}</TableCell>
+                <TableCell className="text-left">{fournisseur.createdAt}</TableCell>
                 <TableCell className="text-right">
                   <div className="text-center flex items-center justify-center gap-2">
                     {/* <DeletePopupCategory
                       categoryId={categorie.id}
                       onDeletes={handleDelete}
                     /> */}
-                    
+
                     <Button
                       variant="outline"
                       onClick={() => {
@@ -189,11 +168,13 @@ export default function ListeFouirnisseurs() {
         </DialogContent> */}
       </Dialog>
       <div className="flex justify-center mt-2">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+        {fournisseur.length > 10 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
     </>
   );

@@ -35,12 +35,12 @@ interface Expenses {
   amount: string;
   userId: string;
   supplierId: string;
-  projectId: string ;
+  projectId: string;
   serviceId: string;
   rubriqueName: string;
-  serviceName?: string ;  
-  projectName?: string ;  
-  supplierName?: string; 
+  serviceName?: string;
+  projectName?: string;
+  supplierName?: string;
 }
 interface ItemsSuplier {
   id: string;
@@ -69,16 +69,15 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
   const [Services, setServices] = React.useState<ItemsService[]>([]);
   const [Rubriques, setRubriques] = React.useState<ItemsRubrique[]>([]);
   const [formData, setFormData] = React.useState({
- id: "",
-   libelle: "",
-  rubriqueId : "",
-  beneficiaire : "",
-  amount : "",
-  userId    :  "",
-  supplierId : "",
-  projectId  : "",
-  serviceId :  "",
-
+    id: "",
+    libelle: "",
+    rubriqueId: "",
+    beneficiaire: "",
+    amount: "",
+    userId: "",
+    supplierId: "",
+    projectId: "",
+    serviceId: "",
   });
 
   async function fetchExpense() {
@@ -97,17 +96,17 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
       setRubriques(result.rubriques);
       setServices(result.services);
       setProjects(result.projects);
-      setSuppliers(result.suppliers)
+      setSuppliers(result.suppliers);
     } catch (error) {
       console.error("Erreur lors de la récupération des depense:", error);
       setExpense([]);
       setRubriques([]);
       setServices([]);
       setProjects([]);
-      setSuppliers([])
+      setSuppliers([]);
     }
   }
-    useEffect(() => {
+  useEffect(() => {
     fetchExpense();
   }, []);
 
@@ -138,34 +137,32 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      console.log(formData)
+      console.log(formData);
       if (!res.ok) {
         const err = await res.json();
-        console.log(err)
+        console.log(err);
         throw new Error(err.error || "Erreur lors de l'ajout de depense");
       }
       if (res.status === 409) {
-        toast.error(
-          "Conflit de données : doublon détecté. Cette element existe déjà !"
-        );
-      } 
-      
+        toast.error("Conflit de données : doublon détecté. Cette element existe déjà !");
+      }
+
       setFormData({
         id: "",
         libelle: "",
-        rubriqueId : "",
-        beneficiaire : "",
-        amount : "",
-        userId    :  "",
-        supplierId : "",
-        projectId  : "",
-        serviceId :  "",
+        rubriqueId: "",
+        beneficiaire: "",
+        amount: "",
+        userId: "",
+        supplierId: "",
+        projectId: "",
+        serviceId: "",
       });
       onClosed();
       toast.success("Depense ajoutée avec succès ✅");
       if (typeof window !== "undefined") {
-  window.dispatchEvent(new CustomEvent("expenseAdded"));
-}
+        window.dispatchEvent(new CustomEvent("expenseAdded"));
+      }
     } catch (error) {
       console.error("Erreur lors de l'ajout :", error);
       toast.error("Échec de l'ajout du depense ❌");
@@ -185,16 +182,14 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
         <div className="grid gap-2">
           <Select
             value={formData.serviceId}
-            onValueChange={(val) =>
-              setFormData((prev) => ({ ...prev, serviceId: val }))
-            }
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, serviceId: val }))}
           >
             <SelectTrigger id="serviceId" className="w-full">
               <SelectValue placeholder="Sélectionner un service" />
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">
-                 {Services.map((cat) => (
+                {Services.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id || ""}
@@ -207,12 +202,10 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             </SelectContent>
           </Select>
         </div>
-         <div className="grid gap-2">
+        <div className="grid gap-2">
           <Select
             value={formData.projectId}
-            onValueChange={(val) =>
-              setFormData((prev) => ({ ...prev, projectId: val }))
-            }
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, projectId: val }))}
           >
             <SelectTrigger id="projectId" className="w-full">
               <SelectValue placeholder="Sélectionner le projet" />
@@ -247,9 +240,7 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
         <div className="grid gap-2">
           <Select
             value={formData.rubriqueId}
-            onValueChange={(val) =>
-              setFormData((prev) => ({ ...prev, rubriqueId: val }))
-            }
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, rubriqueId: val }))}
           >
             <SelectTrigger id="rubrique" className="w-full">
               <SelectValue placeholder="Sélectionner une rubrique" />
@@ -282,12 +273,10 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
           />
         </div>
 
-          <div className="grid gap-2">
+        <div className="grid gap-2">
           <Select
             value={formData.supplierId}
-            onValueChange={(val) =>
-              setFormData((prev) => ({ ...prev, supplierId: val }))
-            }
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, supplierId: val }))}
           >
             <SelectTrigger id="supplierId" className="w-full">
               <SelectValue placeholder="Sélectionner un fournisseur" />
@@ -300,7 +289,7 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
                     value={cat.id || ""}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                   {cat.email || "VIDE"}
+                    {cat.email || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>

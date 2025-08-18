@@ -3,11 +3,7 @@
 import Sidebar from "@/components/sideBar";
 import NavBar from "@/components/navBar";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex w-[100%] min-h-screen ">
       <div className="flex w-[100%] flex-col  ml-72">

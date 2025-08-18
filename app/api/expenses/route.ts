@@ -39,14 +39,14 @@ export async function GET() {
         createdAt: true,
         updatedAt: true,
         service: { select: { name: true } },
-        rubrique: { select: { name: true } },   
-        supplier: { select: { email: true } },  
-        project: { select: { name: true } },   
-        user: { select: { name: true } },      
-      }
+        rubrique: { select: { name: true } },
+        supplier: { select: { email: true } },
+        project: { select: { name: true } },
+        user: { select: { name: true } },
+      },
     });
 
-    const formatted = expenses.map(e => ({
+    const formatted = expenses.map((e) => ({
       ...e,
       rubriqueName: e.rubrique?.name || null,
       serviceName: e.service?.name || null,
@@ -57,25 +57,25 @@ export async function GET() {
       supplier: undefined,
       project: undefined,
       user: undefined,
-      rubrique: undefined
+      rubrique: undefined,
     }));
 
     const rubriques = await prisma.rubrique.findMany({
-      select: { id: true, name: true }
+      select: { id: true, name: true },
     });
 
     const services = await prisma.service.findMany({
-      select: { id: true, name: true }
+      select: { id: true, name: true },
     });
 
     const projects = await prisma.project.findMany({
-      select: { id: true, name: true }
+      select: { id: true, name: true },
     });
-     const suppliers = await prisma.supplier.findMany({
-      select: { id: true, email: true }
+    const suppliers = await prisma.supplier.findMany({
+      select: { id: true, email: true },
     });
 
-    console.log("le resultats :", formatted)
+    console.log("le resultats :", formatted);
     return NextResponse.json(
       {
         success: true,
@@ -105,7 +105,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("reponse a la requete :", body)
+    console.log("reponse a la requete :", body);
     const newExpense = await prisma.expense.create({
       data: {
         libelle: body.libelle || null,
@@ -119,13 +119,9 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(newExpense, {status: 201});
+    return NextResponse.json(newExpense, { status: 201 });
   } catch (error) {
     console.error("❌ Erreur lors de la création :", error);
-    return NextResponse.json(
-      { error: "Erreur lors de l'ajout de dépense." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erreur lors de l'ajout de dépense." }, { status: 500 });
   }
 }
-

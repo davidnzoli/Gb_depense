@@ -29,7 +29,7 @@ import { SelectViewport } from "@radix-ui/react-select";
 
 interface Rubrique {
   id: string;
-   name: string;
+  name: string;
 }
 
 interface AddDataDialogContent {
@@ -39,8 +39,8 @@ interface AddDataDialogContent {
 export default function AddRubrique({ onClosed }: AddDataDialogContent) {
   const [Rubrique, setRubrique] = React.useState<Rubrique[]>([]);
   const [formData, setFormData] = React.useState({
- id: "",
-   name: "",
+    id: "",
+    name: "",
   });
 
   async function fetchRubrique() {
@@ -61,7 +61,7 @@ export default function AddRubrique({ onClosed }: AddDataDialogContent) {
       setRubrique([]);
     }
   }
-    useEffect(() => {
+  useEffect(() => {
     fetchRubrique();
   }, []);
 
@@ -92,17 +92,15 @@ export default function AddRubrique({ onClosed }: AddDataDialogContent) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      console.log(formData)
+      console.log(formData);
       if (!res.ok) {
         const err = await res.json();
-        console.log(err)
+        console.log(err);
         throw new Error(err.error || "Erreur lors de l'ajout de rubrique");
       }
       if (res.status === 409) {
-        toast.error(
-          "Conflit de données : doublon détecté. Cette element existe déjà !"
-        );
-      }     
+        toast.error("Conflit de données : doublon détecté. Cette element existe déjà !");
+      }
       setFormData({
         id: "",
         name: "",
@@ -110,8 +108,8 @@ export default function AddRubrique({ onClosed }: AddDataDialogContent) {
       onClosed();
       toast.success("Rubrique ajoutée avec succès ✅");
       if (typeof window !== "undefined") {
-  window.dispatchEvent(new CustomEvent("expenseAdded"));
-}
+        window.dispatchEvent(new CustomEvent("expenseAdded"));
+      }
     } catch (error) {
       console.error("Erreur lors de l'ajout :", error);
       toast.error("Échec de l'ajout du rubrique ❌");

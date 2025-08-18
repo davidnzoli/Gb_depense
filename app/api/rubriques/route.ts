@@ -30,19 +30,16 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("reponse a la requete :", body)
+    console.log("reponse a la requete :", body);
     const newExpense = await prisma.rubrique.create({
       data: {
         name: body.name || null,
       },
     });
 
-    return NextResponse.json(newExpense, {status: 201});
+    return NextResponse.json(newExpense, { status: 201 });
   } catch (error) {
     console.error("❌ Erreur lors de la création :", error);
-    return NextResponse.json(
-      { error: "Erreur lors de l'ajout de rubrique." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erreur lors de l'ajout de rubrique." }, { status: 500 });
   }
 }

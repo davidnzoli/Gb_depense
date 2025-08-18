@@ -3,28 +3,27 @@ import { NextRequest } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
- request: Request,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   const { id } = await context.params;
 
   if (!id) {
     return NextResponse.json({ error: "ID non fourni." }, { status: 400 });
   }
-  const expense = await prisma.expense.findUnique({ where: { id },include: {
-    supplier: true, 
-  }, });
+  const expense = await prisma.expense.findUnique({
+    where: { id },
+    include: {
+      supplier: true,
+    },
+  });
 
   if (!expense) {
     return NextResponse.json({ error: "Dépense introuvable." }, { status: 404 });
   }
-return NextResponse.json({
+  return NextResponse.json({
     ...expense,
     supplierName: expense.supplier?.name ?? null,
   });
 }
-
 
 // PUT pour modifier une depense
 async function getSupplierIdByName(name: string) {
@@ -56,11 +55,10 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
     console.log("📩 Données reçues :", body);
 
-    
-     const supplierId = await getSupplierIdByName(body.supplierId);
+    const supplierId = await getSupplierIdByName(body.supplierId);
     const serviceId = await getServiceIdByName(body.serviceId);
-const projectId = await getProjectIdByName(body.projectId);
-const userId = await getUserIdByName(body.userId);
+    const projectId = await getProjectIdByName(body.projectId);
+    const userId = await getUserIdByName(body.userId);
     console.log("🔗 ID du fournisseur trouvé :", supplierId);
 
     if (body.supplierId && !supplierId) {
@@ -90,23 +88,13 @@ const userId = await getUserIdByName(body.userId);
     });
 
     return NextResponse.json(updateExpense, { status: 200 });
-
   } catch (error) {
     console.error("❌ Erreur lors de l'update :", error);
-    return NextResponse.json(
-      { error: "Erreur lors de la mise à jour." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erreur lors de la mise à jour." }, { status: 500 });
   }
 }
 
-
-
-
-export async function DELETE(
-  request: Request,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
   const { id } = await context.params;
   try {
     const expense = await prisma.expense.findUnique({
@@ -116,8 +104,7 @@ export async function DELETE(
     if (!expense) {
       return NextResponse.json(
         {
-          error:
-            "Depense non trouvée (OU SOIT ELLE EST DÉJA ÉTÈ SUPPRIMMER, Actualiser la page !",
+          error: "Depense non trouvée (OU SOIT ELLE EST DÉJA ÉTÈ SUPPRIMMER, Actualiser la page !",
         },
         { status: 404 }
       );
@@ -130,9 +117,6 @@ export async function DELETE(
     return NextResponse.json({ message: "Depense supprimée avec succès" });
   } catch (error) {
     console.error("Erreur de suppression:", error);
-    return NextResponse.json(
-      { error: "Erreur lors de la suppression" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
   }
 }

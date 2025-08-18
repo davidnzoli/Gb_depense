@@ -28,12 +28,12 @@ import {
 import { SelectViewport } from "@radix-ui/react-select";
 
 interface fournisseur {
-   id: string;
-  name    :  string
-  contact :  string
-  email     :string
-  nationalite :string
-  createdAt:string
+  id: string;
+  name: string;
+  contact: string;
+  email: string;
+  nationalite: string;
+  createdAt: string;
 }
 
 interface AddDataDialogContent {
@@ -42,15 +42,14 @@ interface AddDataDialogContent {
 
 export default function AddSupplier({ onClosed }: AddDataDialogContent) {
   const [Fournisseuer, setFournisseur] = React.useState<fournisseur[]>([]);
-//   const [projects, setProjects] = React.useState<project[]>([]);
+  //   const [projects, setProjects] = React.useState<project[]>([]);
   const [formData, setFormData] = React.useState({
- id: "",
-  name    :  "",
-  contact :  "",
-  email     :"",
-  nationalite :"",
-  createdAt:""
-
+    id: "",
+    name: "",
+    contact: "",
+    email: "",
+    nationalite: "",
+    createdAt: "",
   });
 
   async function fetchService() {
@@ -71,7 +70,7 @@ export default function AddSupplier({ onClosed }: AddDataDialogContent) {
       setFournisseur([]);
     }
   }
-    useEffect(() => {
+  useEffect(() => {
     fetchService();
   }, []);
 
@@ -102,31 +101,29 @@ export default function AddSupplier({ onClosed }: AddDataDialogContent) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      console.log(formData)
+      console.log(formData);
       if (!res.ok) {
         const err = await res.json();
-        console.log(err)
+        console.log(err);
         throw new Error(err.error || "Erreur lors de l'ajout de fournisseur");
       }
       if (res.status === 409) {
-        toast.error(
-          "Conflit de données : doublon détecté. Cette element existe déjà !"
-        );
-      } 
-      
+        toast.error("Conflit de données : doublon détecté. Cette element existe déjà !");
+      }
+
       setFormData({
-         id: "",
-  name    :  "",
-  contact :  "",
-  email     :"",
-  nationalite :"",
-  createdAt:""
+        id: "",
+        name: "",
+        contact: "",
+        email: "",
+        nationalite: "",
+        createdAt: "",
       });
       onClosed();
       toast.success("Service ajoutée avec succès ✅");
       if (typeof window !== "undefined") {
-  window.dispatchEvent(new CustomEvent("expenseAdded"));
-}
+        window.dispatchEvent(new CustomEvent("expenseAdded"));
+      }
     } catch (error) {
       console.error("Erreur lors de l'ajout :", error);
       toast.error("Échec de l'ajout du service ❌");

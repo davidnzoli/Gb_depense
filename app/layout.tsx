@@ -12,7 +12,6 @@ import { Toaster } from "sonner";
 //   );
 // }
 
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -41,9 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="flex w-[100%] ">
           <main className="flex-grow w-[100%]  items-center justify-center p-6 mt-20 overflow-auto">
             {children}
