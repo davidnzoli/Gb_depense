@@ -71,7 +71,7 @@ export default function ListeRubrique() {
      
 
       if (!resulta || !Array.isArray(resulta.data)) {
-        console.error("Structure inattendue:", resulta);
+        // console.error("Structure inattendue:", resulta);
         setDepenses([]);
         return;
       }
@@ -125,7 +125,7 @@ export default function ListeRubrique() {
         <TableHeader>
           <TableRow>
             <TableHead className="font-medium">Rubrique</TableHead>
-            <TableHead className="text-center">ACTIONS</TableHead>
+            <TableHead className="text-right">ACTIONS</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -136,7 +136,7 @@ export default function ListeRubrique() {
                   {rubrique.name}
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="text-center flex items-center justify-center gap-2">
+                  <div className="text-right flex items-rigth justify-end gap-2">
                     {/* <DeletePopupCategory
                       categoryId={categorie.id}
                       onDeletes={handleDelete}

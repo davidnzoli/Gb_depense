@@ -28,13 +28,25 @@ interface UpdateExpenseItemsProps {
   id: string;
   onUpdate: () => void;
 }
+interface Expenses {
+  id: string;
+  libelle: string;
+  rubriqueId: string;
+  beneficiaire: string;
+  amount: string;
+  userId: string;
+  supplierId: string;
+  projectId: string ;
+  serviceId: string;
+  rubriqueName: string;
+  serviceName?: string ;  
+  projectName?: string ;  
+  supplierName?: string; 
+}
 interface supplierItems {
 id: string;
   name    :  string
-  contact :  string
   email     :string
-  nationalite :string
-  createdAt:string
 }
 interface projectItems {
   id: string;
@@ -46,18 +58,19 @@ interface serviceItems {
   campany: string;
 }
 interface userItems {
-//   id: string;
-//   nomCategorie: string;
+  id: string;
+  name: string;
 }
 interface rubriqueItems {
-//   id: string;
-//   nomCategorie: string;
+  id: string;
+  name: string;
 }
 export default function UpdatedExpense({
   onClose,
   id,
   onUpdate,
 }: UpdateExpenseItemsProps) {
+  const [Expense, setExpense] = React.useState<Expenses[]>([]);
   const [libelle, setlibelle] = React.useState("");
   const [rubrique, setrubrique] = React.useState("");
   const [beneficiaire, setbeneficiaire] = React.useState("");
@@ -66,11 +79,11 @@ export default function UpdatedExpense({
   const [supplierIdItems, setsupplierIdItems] = React.useState<string>("");
   const [serviceIdItems, setserviceIdItems] = React.useState("");
   const [projectIdItems, setprojectIdItems] = React.useState("");
-  const [supplier, setsupplier] = React.useState<supplierItems[]>([]);
-  const [project, setproject] = React.useState<projectItems[]>([]);
-  const [service, setservice] = React.useState<serviceItems[]>([]);
-  const [users, setusers] = React.useState<userItems[]>([]);
-    const [rubriques, setrubriques] = React.useState<rubriqueItems[]>([]);
+  const [Suppliers, setSuppliers] = React.useState<supplierItems[]>([]);
+  const [Projects, setProjects] = React.useState<projectItems[]>([]);
+  const [Services, setServices] = React.useState<serviceItems[]>([]);
+  const [Users, setUsers] = React.useState<userItems[]>([]);
+    const [Rubriques, setRubriques] = React.useState<rubriqueItems[]>([]);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -135,43 +148,70 @@ export default function UpdatedExpense({
     }
   };
 
-  async function fetchsupplierItems() {
-    try {
-      const res = await fetch("/api/suppliers");
-      const result = await res.json();
-      console.log("Réponse brute : ", result);
-
-      if (!result || !Array.isArray(result.data)) {
-        console.error("Structure inattendue:", result);
-        setsupplier([]);
-        return;
+  async function fetchExpense() {
+      try {
+        const res = await fetch("/api/expenses");
+        const result = await res.json();
+        console.log("Réponse brute : ", result);
+  
+        if (!result || !Array.isArray(result.data)) {
+          console.error("Structure inattendue:", result);
+          setExpense([]);
+          return;
+        }
+  
+        setExpense(result.data);
+        setRubriques(result.rubriques);
+        setServices(result.services);
+        setProjects(result.projects);
+        setSuppliers(result.suppliers)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des depense:", error);
+        setExpense([]);
+        setRubriques([]);
+        setServices([]);
+        setProjects([]);
+        setSuppliers([])
       }
-
-      setsupplier(result.data);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des fournisseur:", error);
-      setsupplier([]);
     }
-  }
 
-    async function fetchsserviceItems() {
-    try {
-      const res = await fetch("/api/services");
-      const result = await res.json();
-      console.log("Réponse brute : ", result);
+  // async function fetchsupplierItems() {
+  //   try {
+  //     const res = await fetch("/api/suppliers");
+  //     const result = await res.json();
+  //     console.log("Réponse brute : ", result);
 
-      if (!result || !Array.isArray(result.data)) {
-        console.error("Structure inattendue:", result);
-        setservice([]);
-        return;
-      }
+  //     if (!result || !Array.isArray(result.data)) {
+  //       console.error("Structure inattendue:", result);
+  //       setsupplier([]);
+  //       return;
+  //     }
 
-      setservice(result.data);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des services:", error);
-      setservice([]);
-    }
-  }
+  //     setsupplier(result.data);
+  //   } catch (error) {
+  //     console.error("Erreur lors de la récupération des fournisseur:", error);
+  //     setsupplier([]);
+  //   }
+  // }
+
+  //   async function fetchsserviceItems() {
+  //   try {
+  //     const res = await fetch("/api/services");
+  //     const result = await res.json();
+  //     console.log("Réponse brute : ", result);
+
+  //     if (!result || !Array.isArray(result.data)) {
+  //       console.error("Structure inattendue:", result);
+  //       setservice([]);
+  //       return;
+  //     }
+
+  //     setservice(result.data);
+  //   } catch (error) {
+  //     console.error("Erreur lors de la récupération des services:", error);
+  //     setservice([]);
+  //   }
+  // }
 
 //   async function fetchprojectItems() {
 //     try {
@@ -192,9 +232,7 @@ export default function UpdatedExpense({
 //     }
 //   }
   React.useEffect(() => {
-    fetchsupplierItems();
-    fetchsserviceItems();
-    // fetchprojectItems();
+    fetchExpense();
   }, []);
   return (
     <DialogContent className="animate-in duration-200 ease-out data-[state=openss]:fade-in data-[state=closed]:fade-out">
@@ -221,7 +259,7 @@ export default function UpdatedExpense({
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">
-                {service.map((cat) => (
+                {Services.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={String(cat.name)}
@@ -248,7 +286,7 @@ export default function UpdatedExpense({
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">
-                {project.map((cat) => (
+                {Projects.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={String(cat.name)}
@@ -260,46 +298,6 @@ export default function UpdatedExpense({
               </SelectViewport>
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="grid gap-2">
-          <Select
-            value={supplierIdItems}
-            onValueChange={(value) => {
-              console.log("Nouvelle valeur sélectionnée :", value);
-              setsupplierIdItems(value);
-            }}
-          >
-            <SelectTrigger id="supplier" className="w-full">
-              <SelectValue placeholder="Sélectionnez une supplier" />
-            </SelectTrigger>
-            <SelectContent className="w-full">
-              <SelectViewport className="max-h-60 overflow-y-auto">
-                {supplier.map((cat) => (
-                  <SelectItem
-                    key={cat.id}
-                    value={String(cat.name)}
-                    className="hover:bg-green-500 hover:text-white"
-                  >
-                    {cat.name} --
-                    {cat.nationalite}
-                  </SelectItem>
-                ))}
-              </SelectViewport>
-            </SelectContent>
-          </Select>
-        </div>
- <div className="grid gap-2 w-full">
-          <Label htmlFor="libelle">libelle</Label>
-          <Input
-            id="libelle"
-            name="libelle"
-            type="text"
-            value={libelle}
-            onChange={(e) => setlibelle(e.target.value)}
-            required
-            className="w-full"
-          />
         </div>
          <div className="grid gap-2">
           <Select
@@ -314,10 +312,10 @@ export default function UpdatedExpense({
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">
-                {rubriques.map((cat) => (
+                {Rubriques.map((cat) => (
                   <SelectItem
                    
-                    value={String(cat)}
+                    value={String(cat.name)}
                     className="hover:bg-green-500 hover:text-white"
                   >
                     
@@ -327,7 +325,19 @@ export default function UpdatedExpense({
             </SelectContent>
           </Select>
         </div>
-        <div className="grid gap-2 w-full">
+      <div className="grid gap-2 w-full">
+          <Label htmlFor="libelle">libelle</Label>
+          <Input
+            id="libelle"
+            name="libelle"
+            type="text"
+            value={libelle}
+            onChange={(e) => setlibelle(e.target.value)}
+            required
+            className="w-full"
+          />
+        </div>
+         <div className="grid gap-2 w-full">
           <Label htmlFor="amount">amount</Label>
           <Input
             id="amount"
@@ -339,7 +349,32 @@ export default function UpdatedExpense({
             className="w-full"
           />
         </div>
-        
+         <div className="grid gap-2">
+          <Select
+            value={supplierIdItems}
+            onValueChange={(value) => {
+              console.log("Nouvelle valeur sélectionnée :", value);
+              setsupplierIdItems(value);
+            }}
+          >
+            <SelectTrigger id="supplier" className="w-full">
+              <SelectValue placeholder="Sélectionnez une supplier" />
+            </SelectTrigger>
+            <SelectContent className="w-full">
+              <SelectViewport className="max-h-60 overflow-y-auto">
+                {Suppliers.map((cat) => (
+                  <SelectItem
+                    key={cat.id}
+                    value={String(cat.name)}
+                    className="hover:bg-green-500 hover:text-white"
+                  >
+                    {cat.email}
+                  </SelectItem>
+                ))}
+              </SelectViewport>
+            </SelectContent>
+          </Select>
+        </div>
         <DialogFooter className="mt-4 flex flex-col sm:flex-row gap-2 sm:justify-end">
           <Button variant="outline" type="button" onClick={onClose}>
             Annuler

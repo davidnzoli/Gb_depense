@@ -17,6 +17,7 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   expenses  Expense[]
+  Project Project[]
 }
 
 model Company {
@@ -25,6 +26,13 @@ model Company {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   services  Service[]
+}
+
+model Devise {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Service {
@@ -48,13 +56,55 @@ model Rubrique {
   expenses  Expense[]
 }
 model Project {
-  id        String    @id @default(cuid())
-  name      String
-  serviceId String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  expenses  Expense[]
-  service   Service   @relation(fields: [serviceId], references: [id])
+  id             String     @id @default(cuid())
+  name           String
+  description    String?    // Détails sur le projet
+  serviceId      String
+  clients       String?    // Lien vers un client s'il y en a
+  userId      String?    // Responsable du projet (utilisateur)
+  location       String?    // Localisation ou adresse du projet
+  status        ProjectStatus @default(PLANNED) // État du projet
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  expenses       Expense[]
+  service        Service    @relation(fields: [serviceId], references: [id])
+  user        User?      @relation(fields: [userId], references: [id])
+  milestones     Milestone[] // Étapes ou jalons du projet
+  documents      Document[]  // Plans, photos, contrats
+
+}
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+  CANCELED
+}
+ // budget         Float?     // Budget estimé
+  // devisNumber    String?    // Référence de devis ou contrat
+  // startDate      DateTime   @map("datedebut")
+  // endDate        DateTime   @map("dateFin")
+  
+model Milestone {
+  id          String   @id @default(cuid())       // Identifiant unique du jalon
+  projectId   String                              // Référence au projet
+  title       String                              // Titre du jalon
+  description String?                             // Description optionnelle
+  dueDate     DateTime                            // Date prévue d'achèvement
+  completed   Boolean  @default(false)            // État d'avancement (fini ou pas)
+  createdAt   DateTime @default(now())            // Date de création
+  updatedAt   DateTime @updatedAt                 // Date de dernière modification
+
+  project     Project  @relation(fields: [projectId], references: [id])  
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  title     String
+  fileUrl   String   // Lien vers le fichier stocké
+  type      String?  // Type de document (plan, photo, contrat)
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
 }
 
 model Supplier {

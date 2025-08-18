@@ -42,17 +42,36 @@ interface Expenses {
   projectName?: string ;  
   supplierName?: string; 
 }
+interface ItemsSuplier {
+  id: string;
+  email: string;
+}
+interface ItemsService {
+  id: string;
+  name: string;
+}
+interface ItemsProject {
+  id: string;
+  name: string;
+}
+interface ItemsRubrique {
+  id: string;
+  name: string;
+}
 interface AddDataDialogContent {
   onClosed: () => void;
 }
 
 export default function AddExpense({ onClosed }: AddDataDialogContent) {
   const [Expense, setExpense] = React.useState<Expenses[]>([]);
-//   const [projects, setProjects] = React.useState<project[]>([]);
+  const [Suppliers, setSuppliers] = React.useState<ItemsSuplier[]>([]);
+  const [Projects, setProjects] = React.useState<ItemsProject[]>([]);
+  const [Services, setServices] = React.useState<ItemsService[]>([]);
+  const [Rubriques, setRubriques] = React.useState<ItemsRubrique[]>([]);
   const [formData, setFormData] = React.useState({
  id: "",
    libelle: "",
-  rubrique : "",
+  rubriqueId : "",
   beneficiaire : "",
   amount : "",
   userId    :  "",
@@ -75,9 +94,17 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
       }
 
       setExpense(result.data);
+      setRubriques(result.rubriques);
+      setServices(result.services);
+      setProjects(result.projects);
+      setSuppliers(result.suppliers)
     } catch (error) {
       console.error("Erreur lors de la récupération des depense:", error);
       setExpense([]);
+      setRubriques([]);
+      setServices([]);
+      setProjects([]);
+      setSuppliers([])
     }
   }
     useEffect(() => {
@@ -125,14 +152,14 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
       
       setFormData({
         id: "",
-   libelle: "",
-  rubrique : "",
-  beneficiaire : "",
-  amount : "",
-  userId    :  "",
-  supplierId : "",
-  projectId  : "",
-  serviceId :  "",
+        libelle: "",
+        rubriqueId : "",
+        beneficiaire : "",
+        amount : "",
+        userId    :  "",
+        supplierId : "",
+        projectId  : "",
+        serviceId :  "",
       });
       onClosed();
       toast.success("Depense ajoutée avec succès ✅");
@@ -167,13 +194,13 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">
-                {Expense.map((cat) => (
+                 {Services.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id || ""}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                    {cat.serviceName || "VIDE"}
+                    {cat.name || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>
@@ -192,13 +219,13 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">
-                {Expense.map((cat) => (
+                {Projects.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                    {cat.projectId || "VIDE"}
+                    {cat.name || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>
@@ -219,9 +246,9 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
         </div>
         <div className="grid gap-2">
           <Select
-            value={formData.rubrique}
+            value={formData.rubriqueId}
             onValueChange={(val) =>
-              setFormData((prev) => ({ ...prev, libelle: val }))
+              setFormData((prev) => ({ ...prev, rubriqueId: val }))
             }
           >
             <SelectTrigger id="rubrique" className="w-full">
@@ -229,13 +256,13 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">
-                {Expense.map((cat) => (
+                {Rubriques.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                    {cat.rubriqueName || "VIDE"}
+                    {cat.name || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>
@@ -267,13 +294,13 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">
-                {Expense.map((cat) => (
+                {Suppliers.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id || ""}
                     className="hover:bg-green-500 hover:text-white"
                   >
-                   {cat.supplierName || "VIDE"}
+                   {cat.email || "VIDE"}
                   </SelectItem>
                 ))}
               </SelectViewport>

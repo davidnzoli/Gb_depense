@@ -3,13 +3,13 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const categorie = await prisma.supplier.findMany();
+    const fournisseur = await prisma.supplier.findMany();
 
     return NextResponse.json(
       {
         success: true,
         message: "Liste des fournisseur récupérée avec succès.",
-        data: categorie,
+        data: fournisseur,
       },
       { status: 200 }
     );

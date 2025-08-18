@@ -34,10 +34,30 @@ interface ItemsDepense {
   supplier : string
 }
 
+interface ItemsSuplier {
+  id: string;
+  email: string;
+}
+interface ItemsService {
+  id: string;
+  name: string;
+}
+interface ItemsProject {
+  id: string;
+  name: string;
+}
+interface ItemsRubrique {
+  id: string;
+  name: string;
+}
 export default function listeDepenses() {
   const [open, setOpen] = React.useState(false);
   const [opens, setOpens] = React.useState(false);
   const [depenses, setDepenses] = useState<ItemsDepense[]>([]);
+  const [suppliers, setSuppliers] = useState<ItemsSuplier[]>([]);
+  const [projects, setProjects] = useState<ItemsProject[]>([]);
+  const [services, setServices] = useState<ItemsService[]>([]);
+  const [rubriques, setRubriques] = useState<ItemsRubrique[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(7);
   const [selectedDepenseId, setSelectedDepenseId] = useState<string | null>(
@@ -47,7 +67,21 @@ export default function listeDepenses() {
   async function fetchDepenses() {
     const res = await fetch("/api/expenses");
     const resulta = await res.json();
+
+    if (!resulta || !Array.isArray(resulta.data)) {
+        console.error("Structure inattendue:", resulta);
+         setDepenses([]);
+         setRubriques([]);
+         setServices([]);
+         setProjects([]);
+         setSuppliers([])
+        return;
+      }
     setDepenses(resulta.data);
+    setRubriques(resulta.rubriques);
+    setServices(resulta.services);
+    setProjects(resulta.projects);
+    setSuppliers(resulta.suppliers)
   }
 
 useEffect(() => {

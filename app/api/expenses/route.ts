@@ -60,11 +60,31 @@ export async function GET() {
       rubrique: undefined
     }));
 
+    const rubriques = await prisma.rubrique.findMany({
+      select: { id: true, name: true }
+    });
+
+    const services = await prisma.service.findMany({
+      select: { id: true, name: true }
+    });
+
+    const projects = await prisma.project.findMany({
+      select: { id: true, name: true }
+    });
+     const suppliers = await prisma.supplier.findMany({
+      select: { id: true, email: true }
+    });
+
+    console.log("le resultats :", formatted)
     return NextResponse.json(
       {
         success: true,
         message: "Liste des dépenses récupérée avec succès.",
         data: formatted,
+        rubriques,
+        services,
+        suppliers,
+        projects,
       },
       { status: 200 }
     );
