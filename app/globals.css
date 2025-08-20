@@ -1,11 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@fontsource/poppins/400.css"; /* Regular */
+@import "@fontsource/poppins/500.css"; /* Medium */
+@import "@fontsource/poppins/600.css"; /* SemiBold */
+@import "@fontsource/poppins/700.css"; /* Bold */
+
+/* @tailwind base; */
+@tailwind utilities;
 
 @custom-variant dark (&:is(.dark *));
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @theme inline {
   --color-background: var(--background);
@@ -117,10 +120,10 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+  html,
   body {
-    @apply bg-background text-foreground;
+    font-family: "Poppins", sans-serif;
+    background-color: theme("colors.background");
+    color: theme("colors.foreground");
   }
 }

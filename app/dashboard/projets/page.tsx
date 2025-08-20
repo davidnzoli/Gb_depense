@@ -17,12 +17,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Pagination from "@/components/pagination";
-import { Trash, Edit,Loader2, Pencil, Eye } from "lucide-react";
+import { Trash, Edit, Inbox, Loader2, Pencil, Eye } from "lucide-react";
 import AddExpense from "@/components/popups/addNews/addExpense";
 import UpdatedExpense from "@/components/popups/updateContent/updateExpense";
 import DeleteExpense from "@/components/popups/deleteContent/deleteExpense";
 import AddProject from "@/components/popups/addNews/addProject";
 import Router from "next/router";
+import Link from "next/link";
 
 interface ItemsProjects {
   id: string;
@@ -43,6 +44,7 @@ export default function listeProject() {
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(7);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+
 
   async function fetchProjects() {
     setLoading(true);
@@ -88,111 +90,150 @@ export default function listeProject() {
 
   return (
     <>
-    <div className="justify-center  items-center w-[100%] h-full">
+      <div className="justify-center  items-center w-[100%] h-full">
         {loading ? (
           <div className="flex justify-center items-center h-full">
             <Loader2 className="animate-spin h-16 w-15 text-green-500" />
           </div>
         ) : (
-            <>
-             <div className="flex h-16 bg-white p-9 mb-1 justify-between items-center gap-3.5">
-        <div className="flex justifyßß-center items-center gap-2">
-          <Input type="category" className="w-70" placeholder="Filtrer par nom de projet" />
-        </div>
-        <div className="flex justify-center items-center gap-2">
-          <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
-          <Dialog open={opens} onOpenChange={setOpens}>
-            <DialogTrigger asChild>
-              <Button className="bg-green-500 cursor-pointer flex items-center">
-                Ajouter
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </DialogTrigger>
-            <AddProject onClosed={() => setOpens(false)} />
-          </Dialog>
-        </div>
-      </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="font-medium">Nom de projet</TableHead>
-            <TableHead className="font-medium">Service</TableHead>
-            <TableHead className="font-center">Description</TableHead>
-            <TableHead className="font-medium">Nom du client</TableHead>
-            <TableHead className="font-medium">État du projet</TableHead>
-            <TableHead className="text-center">ACTIONS</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentCategories && currentCategories.length > 0 ? (
-            currentCategories.map((projet) => (
-              <TableRow key={projet.id}>
-                <TableCell>{projet.name}</TableCell>
-                <TableCell className="text-left">{projet.serviceId}</TableCell>
-                <TableCell className="text-left">{projet.description}</TableCell>
-                <TableCell className="text-left">{projet.clients}</TableCell>
-                <TableCell className="text-left">{projet.status}</TableCell>
-                <TableCell className="text-right">
-                  <div className="text-center flex items-center justify-center gap-2">
-                    <DeleteExpense id={projet.id} onDeletes={handleDelete} />
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedProjectId(projet.id);
-                        setOpen(true);
-                      }}
-                      className="flex items-center cursor-pointer space-x-2"
-                    >
-                      <Eye className="h-5 w-5 text-blue-800" />
+          <>
+            <div className="flex h-16 bg-white p-9 mb-1 justify-between items-center gap-3.5">
+              <div className="flex justifyßß-center items-center gap-2">
+                <Input type="category" className="w-70" placeholder="Filtrer par nom de projet" />
+              </div>
+              <div className="flex justify-center items-center gap-2">
+                <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
+                <Dialog open={opens} onOpenChange={setOpens}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-green-500 cursor-pointer flex items-center">
+                      Ajouter
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        Router.push("./components_completeData/projets");
-                        setOpen(true);
-                      }}
-                      className="flex items-center cursor-pointer space-x-2"
-                    >
-                      <Pencil className="h-5 w-5 text-blue-800" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={3} className="text-center">
-                Aucun projet trouvée
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogTitle>Modifier la projects</DialogTitle>
-          {selectedProjectId && (
-            <UpdatedExpense
-              id={selectedProjectId}
-              onClose={() => setOpen(false)}
-              onUpdate={fetchProjects}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
-      <div className="flex justify-center mt-2">
-        {Projects.length > 10 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+                  </DialogTrigger>
+                  <AddProject onClosed={() => setOpens(false)} />
+                </Dialog>
+              </div>
+            </div>
+            {currentCategories && currentCategories.length > 0 ? (
+              currentCategories.map((projet) => (
+                <Table key={projet.id}>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        Nom de projet
+                      </TableHead>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        Service
+                      </TableHead>
+                      <TableHead className="font-center text-[#1e1e2f] text-base">
+                        Description
+                      </TableHead>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        Nom du client
+                      </TableHead>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        État du projet
+                      </TableHead>
+                      <TableHead className="text-center text-[#1e1e2f] text-base">
+                        ACTIONS
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow key={projet.id}>
+                      <TableCell>{projet.name}</TableCell>
+                      <TableCell className="text-left">{projet.serviceId}</TableCell>
+                      <TableCell className="text-left">{projet.description}</TableCell>
+                      <TableCell className="text-left">{projet.clients}</TableCell>
+                      <TableCell className="text-left">{projet.status}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <DeleteExpense id={projet.id} onDeletes={handleDelete} />
+                          <Link href="./components_completeData/projets">
+                           <Button
+                            variant="outline"
+                            className="flex items-center cursor-pointer"
+                          >
+                            <Eye className="h-5 w-5 text-blue-800" />
+                          </Button>
+                          </Link>
+                         
+                          <Button
+                            variant="outline"
+                           
+                            className="flex items-center cursor-pointer"
+                          >
+                            <Pencil className="h-5 w-5 text-blue-800" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              ))
+            ) : (
+              <>
+                <Table>
+                  <TableHeader>
+                    <TableRow className="text-[#1e1e2f]">
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        Nom de projet
+                      </TableHead>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        Service
+                      </TableHead>
+                      <TableHead className="font-center text-[#1e1e2f] text-base">
+                        Description
+                      </TableHead>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        Nom du client
+                      </TableHead>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        Nom du client
+                      </TableHead>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        Nom du client
+                      </TableHead>
+                      <TableHead className="font-medium text-[#1e1e2f] text-base">
+                        État du projet
+                      </TableHead>
+                      <TableHead className="text-center text-[#1e1e2f] text-base">
+                        ACTIONS
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                </Table>
+                <div className="flex flex-col justify-center text-center text-[#1e1e2f] text-base items-center mt-56">
+                  <img src="/undraw_no-data_ig65.svg" className="w-48 h-48" alt="svg-no-data" />
+                  Aucun projet trouvé dans cette table, Veuillez ajouter un <br /> projets puis
+                  verifiez après !
+                </div>
+              </>
+            )}
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogContent>
+                <DialogTitle>Modifier la projects</DialogTitle>
+                {selectedProjectId && (
+                  <UpdatedExpense
+                    id={selectedProjectId}
+                    onClose={() => setOpen(false)}
+                    onUpdate={fetchProjects}
+                  />
+                )}
+              </DialogContent>
+            </Dialog>
+            <div className="flex justify-center mt-2">
+              {Projects.length > 10 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </div>
+          </>
         )}
       </div>
-            </>
-        )}
-        </div>
-     
     </>
   );
 }

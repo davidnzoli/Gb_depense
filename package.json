@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/poppins": "^5.2.6",
     "@hookform/resolvers": "^5.2.1",
+    "@next/font": "^14.2.15",
     "@prisma/client": "^6.13.0",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-collapsible": "^1.1.11",

@@ -23,70 +23,70 @@ import { ChevronDown } from "lucide-react";
 
 const menuItems = [
   {
-    text: "Dashboard",
+    text: "DASHBOARD",
     icon: <LayoutDashboard className="h-5 w-5" />,
     href: "/dashboard",
   },
   {
-    text: "Dépenses",
+    text: "GERER LES DEPENSES",
     icon: <Wallet className="h-5 w-5" />,
     subItems: [
       {
-        text: "Toutes les dépenses",
+        text: "DEPENSES",
         icon: <Wallet className="h-5 w-5" />,
         href: "/dashboard/depenses/listdepenses",
       },
       {
-        text: "Catégories de dépenses",
+        text: "CATEGORIES",
         icon: <Archive className="h-5 w-5" />,
         href: "/dashboard/depenses/categories",
       },
     ],
   },
   {
-    text: "Services",
+    text: "SERVICES",
     icon: <Building2 className="h-5 w-5" />,
     href: "/dashboard/service",
   },
   {
-    text: "Projets",
+    text: "PROJETS",
     icon: <FolderKanban className="h-5 w-5" />,
     href: "/dashboard/projets",
   },
   {
-    text: "Fournisseurs",
+    text: "FOURNISSEURS",
     icon: <Truck className="h-5 w-5" />,
     href: "/dashboard/fournisseurs",
   },
   {
-    text: "Rapports",
+    text: "RAPORTS",
     icon: <FileText className="h-5 w-5" />,
     subItems: [
-      { text: "Rapport dépenses", href: "/dashboard/rapports/depenses" },
-      { text: "Rapport projets", href: "/dashboard/rapports/projets" },
+      { text: "RAPPORTS DES DEPENSES", href: "/dashboard/rapports/depenses" },
+      { text: "RAPPORTS DES PROJETS", href: "/dashboard/rapports/projets" },
     ],
   },
   {
-    text: "Comptabilité",
+    text: "COMPTABILITE",
     icon: <Calculator className="h-5 w-5" />,
     subItems: [
-      { text: "Plan comptable", href: "/dashboard/comptabilite/plan" },
-      { text: "Bilan", href: "/dashboard/comptabilite/bilan" },
-      { text: "Rubrique comptable", href: "/dashboard/comptabilite/rubrique" },
+      { text: "PLAN COMPTABLE", href: "/dashboard/comptabilite/plan" },
+      { text: "BILAN", href: "/dashboard/comptabilite/bilan" },
+      { text: "RUBRIQUE COMPTABLE", href: "/dashboard/comptabilite/rubrique" },
     ],
   },
   {
-    text: "Utilisateurs",
+    text: "UTULISATEURS",
     icon: <UserCog className="h-5 w-5" />,
     href: "/dashboard/utilisateurs",
   },
   {
-    text: "Mon compte",
+    text: "MON COMPTE",
     icon: <UserCircle className="h-5 w-5" />,
     href: "/dashboard/profile",
   },
   {
-    text: "Paramètres",
+    text: "PARAMETRE",
     icon: <Settings className="h-5 w-5" />,
     href: "/dashboard/parametres",
   },
@@ -94,21 +94,21 @@ const menuItems = [
 
 export default function Sidebar() {
   return (
-    <aside className="w-72 h-screen fixed left-0 pt-16 pb-20 top-0 gap-9 items-center  bg-[#1e1e2f] text-white font-poppins flex flex-col justify-between">
+    <aside className="w-72 h-screen fixed left-0 pt-16 pb-20 top-0 gap-9 items-center  bg-[#1e1e2f] text-white font-poppins font-bold flex flex-col justify-between">
       <h1 className="text-[20px] text-green-500 font-bold">GB-DEPENSES</h1>
       <ScrollArea className="h-full w-[99%]">
-        <nav className="p-4 flex flex-col justify-center items-start ">
+        <nav className="p-4 flex flex-col justify-center items-start gap-2 font-bold ">
           {menuItems.map((item, index) =>
             item.subItems ? (
               <Collapsible key={index}>
                 <CollapsibleTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="w-full justify-between text-left text-white hover:bg-[#2e2e40] hover:text-white cursor-pointer mb-2"
+                    className="w-full justify-between font-normal text-left text-gray-200 text-base hover:bg-[#2e2e40]  hover:text-white cursor-pointer mb-2"
                   >
-                    <div className="flex items-center font-normal space-x-3">
-                      {item.icon}
-                      <span>{item.text}</span>
+                    <div className="flex items-center space-x-3 ">
+                      <span className="mr-6">{item.icon}</span>
+                      {item.text}
                     </div>
                     <ChevronDown className="h-4 w-4" />
                   </Button>
@@ -118,7 +118,7 @@ export default function Sidebar() {
                     <Link key={subIndex} href={subItem.href}>
                       <Button
                         variant="ghost"
-                        className="w-full justify-start font-normal text-sm text-white hover:bg-[#2e2e40] hover:text-white cursor-pointer"
+                        className="w-full justify-start font-normal text-sm text-gray-200 hover:bg-[#2e2e40] hover:text-white cursor-pointer"
                       >
                         {subItem.text}
                       </Button>
@@ -130,7 +130,7 @@ export default function Sidebar() {
               <Link key={index} href={item.href}>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start font-normal  text-left text-white hover:bg-[#2e2e40] hover:text-white cursor-pointer mb-2"
+                  className="w-full justify-start font-normal text-left text-base text-gray-200 hover:bg-[#2e2e40] hover:text-white cursor-pointer mb-2"
                 >
                   <span className="mr-3">{item.icon}</span>
                   {item.text}
@@ -142,7 +142,7 @@ export default function Sidebar() {
         <div className="p-4 border-t border-white/10">
           <Button
             variant="ghost"
-            className="w-full justify-start text-left text-white hover:bg-[#2e2e40] hover:text-white cursor-pointer"
+            className="w-full justify-start text-left text-gray-200 hover:bg-[#2e2e40] hover:text-white cursor-pointer"
           >
             <LogOut className="h-5 w-5 mr-3" />
             Déconnexion
