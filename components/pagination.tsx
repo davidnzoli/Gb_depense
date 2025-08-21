@@ -77,7 +77,7 @@ export default function PaginationComponent({
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <Pagination className="mt-4 flex justify-center">
+    <Pagination className="mt-4 flex justify-end items-center">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
@@ -98,6 +98,7 @@ export default function PaginationComponent({
                 e.preventDefault();
                 onPageChange(page);
               }}
+              className="text-[#1e1e2f]"
             >
               {page}
             </PaginationLink>

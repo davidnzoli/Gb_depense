@@ -118,17 +118,17 @@ export default function ListeRubrique() {
                 </Dialog>
               </div>
             </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
+            <Table className="border border-gray-200">
+              <TableHeader className="border border-gray-200">
+                <TableRow className="border-none">
                   <TableHead className="font-medium">Rubrique</TableHead>
                   <TableHead className="text-right">ACTIONS</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="border border-gray-200">
                 {currentCategories && currentCategories.length > 0 ? (
                   currentCategories.map((rubrique) => (
-                    <TableRow key={rubrique.id}>
+                    <TableRow key={rubrique.id} className="border border-gray-200">
                       <TableCell className="text-left">{rubrique.name}</TableCell>
                       <TableCell className="text-right">
                         <div className="text-right flex items-rigth justify-end gap-2">
@@ -143,9 +143,9 @@ export default function ListeRubrique() {
                               setSelectedServiceId(rubrique.id);
                               setOpen(true);
                             }}
-                            className="flex items-center cursor-pointer space-x-2"
+                            className="flex items-center cursor-pointer border-1 border-gray-100 space-x-2"
                           >
-                            <Edit className="h-5 w-5 text-blue-500" />
+                            <Edit className="h-5 w-5 text-[#1e1e2f]" />
                           </Button>
                           <Button
                             variant="outline"
@@ -153,7 +153,7 @@ export default function ListeRubrique() {
                               setSelectedServiceId(rubrique.id);
                               setOpen(true);
                             }}
-                            className="flex items-center cursor-pointer space-x-2"
+                            className="flex items-center cursor-pointer border-1 border-gray-100 space-x-2"
                           >
                             <Trash className="h-5 w-5 text-red-500" />
                           </Button>
@@ -163,8 +163,16 @@ export default function ListeRubrique() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center">
-                      Aucune rubrique trouvée
+                    <TableCell colSpan={7} className="text-center py-10">
+                      <div className="flex flex-col justify-center items-center text-[#1e1e2f] text-base">
+                        <img
+                          src="/undraw_no-data_ig65.svg"
+                          className="w-48 h-48 mb-4"
+                          alt="svg-no-data"
+                        />
+                        Aucun projet trouvé dans cette table, veuillez ajouter un <br /> projet puis
+                        vérifier après !
+                      </div>
                     </TableCell>
                   </TableRow>
                 )}

@@ -24,6 +24,7 @@ import DeleteExpense from "@/components/popups/deleteContent/deleteExpense";
 import AddProject from "@/components/popups/addNews/addProject";
 import Router from "next/router";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 interface ItemsProjects {
   id: string;
@@ -32,6 +33,7 @@ interface ItemsProjects {
   serviceId: string;
   clients: string;
   userId: string;
+  serviceName: string | null;
   location: string;
   status: string;
 }
@@ -41,10 +43,10 @@ export default function listeProject() {
   const [open, setOpen] = React.useState(false);
   const [opens, setOpens] = React.useState(false);
   const [Projects, setProjects] = useState<ItemsProjects[]>([]);
+  const [ProjectsId, setProjectsId] = useState<ItemsProjects[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [categoriesPerPage] = useState(7);
+  const [categoriesPerPage] = useState(2);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-
 
   async function fetchProjects() {
     setLoading(true);
@@ -114,102 +116,80 @@ export default function listeProject() {
                 </Dialog>
               </div>
             </div>
-            {currentCategories && currentCategories.length > 0 ? (
-              currentCategories.map((projet) => (
-                <Table key={projet.id}>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        Nom de projet
-                      </TableHead>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        Service
-                      </TableHead>
-                      <TableHead className="font-center text-[#1e1e2f] text-base">
-                        Description
-                      </TableHead>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        Nom du client
-                      </TableHead>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        État du projet
-                      </TableHead>
-                      <TableHead className="text-center text-[#1e1e2f] text-base">
-                        ACTIONS
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow key={projet.id}>
+            <Table className="border border-gray-200">
+              <TableHeader className="border border-gray-200">
+                <TableRow className="border-none">
+                  <TableHead className="font-medium text-[#1e1e2f] text-base">
+                    Nom de projet
+                  </TableHead>
+                  <TableHead className="font-medium text-[#1e1e2f] text-base">Service</TableHead>
+                  <TableHead className="font-medium text-[#1e1e2f] text-base">
+                    Nom du client
+                  </TableHead>
+                  <TableHead className="font-medium text-[#1e1e2f] text-base">
+                    État du projet
+                  </TableHead>
+                  <TableHead className="text-center text-[#1e1e2f] text-base">ACTIONS</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="border border-gray-200">
+                {currentCategories && currentCategories.length > 0 ? (
+                  currentCategories.map((projet) => (
+                    <TableRow key={projet.id} className="border border-gray-200">
                       <TableCell>{projet.name}</TableCell>
-                      <TableCell className="text-left">{projet.serviceId}</TableCell>
-                      <TableCell className="text-left">{projet.description}</TableCell>
+                      <TableCell className="text-left">{projet.serviceName}</TableCell>
                       <TableCell className="text-left">{projet.clients}</TableCell>
                       <TableCell className="text-left">{projet.status}</TableCell>
                       <TableCell className="text-right">
                         <div className="text-center flex items-center justify-center space-x-2">
                           <DeleteExpense id={projet.id} onDeletes={handleDelete} />
-                          <Link href="./components_completeData/projets">
-                           <Button
-                            variant="outline"
-                            className="flex items-center cursor-pointer"
-                          >
-                            <Eye className="h-5 w-5 text-blue-800" />
-                          </Button>
+                          <Link href={`/dashboard/projets/${projet.id}`}>
+                            <Button
+                              variant="outline"
+                              className="flex items-center border-1 border-gray-100 cursor-pointer"
+                            >
+                              <Eye className="h-5 w-5 text-green-500" />
+                            </Button>
                           </Link>
-                         
+
                           <Button
                             variant="outline"
-                           
-                            className="flex items-center cursor-pointer"
+                            className="flex items-center cursor-pointer border-1 border-gray-100"
                           >
-                            <Pencil className="h-5 w-5 text-blue-800" />
+                            <Pencil className="h-5 w-5 text-[#1e1e2f]" />
                           </Button>
                         </div>
                       </TableCell>
                     </TableRow>
-                  </TableBody>
-                </Table>
-              ))
-            ) : (
-              <>
-                <Table>
-                  <TableHeader>
-                    <TableRow className="text-[#1e1e2f]">
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        Nom de projet
-                      </TableHead>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        Service
-                      </TableHead>
-                      <TableHead className="font-center text-[#1e1e2f] text-base">
-                        Description
-                      </TableHead>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        Nom du client
-                      </TableHead>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        Nom du client
-                      </TableHead>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        Nom du client
-                      </TableHead>
-                      <TableHead className="font-medium text-[#1e1e2f] text-base">
-                        État du projet
-                      </TableHead>
-                      <TableHead className="text-center text-[#1e1e2f] text-base">
-                        ACTIONS
-                      </TableHead>
+                  ))
+                ) : (
+                  <>
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-10">
+                        <div className="flex flex-col justify-center items-center text-[#1e1e2f] text-base">
+                          <img
+                            src="/undraw_no-data_ig65.svg"
+                            className="w-48 h-48 mb-4"
+                            alt="svg-no-data"
+                          />
+                          Aucun projet trouvé dans cette table, veuillez ajouter un <br /> projet
+                          puis vérifier après !
+                        </div>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                </Table>
-                <div className="flex flex-col justify-center text-center text-[#1e1e2f] text-base items-center mt-56">
-                  <img src="/undraw_no-data_ig65.svg" className="w-48 h-48" alt="svg-no-data" />
-                  Aucun projet trouvé dans cette table, Veuillez ajouter un <br /> projets puis
-                  verifiez après !
-                </div>
-              </>
-            )}
+                  </>
+                )}
+              </TableBody>
+            </Table>
+             <div className="flex w-[100%] mt-2">
+              {Projects.length > 2 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogContent>
                 <DialogTitle>Modifier la projects</DialogTitle>
@@ -222,15 +202,7 @@ export default function listeProject() {
                 )}
               </DialogContent>
             </Dialog>
-            <div className="flex justify-center mt-2">
-              {Projects.length > 10 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
-              )}
-            </div>
+           
           </>
         )}
       </div>
