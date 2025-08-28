@@ -25,74 +25,35 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   //   return Response.json(project);
 }
 
-// // PUT pour modifier une depense
-// async function getSupplierIdByName(name: string) {
-//   if (!name) return null;
-//   const supplier = await prisma.supplier.findFirst({ where: { name } });
-//   return supplier ? supplier.id : null;
-// }
-// async function getUserIdByName(name: string) {
-//   if (!name) return null;
-//   const user = await prisma.user.findFirst({ where: { name } });
-//   return user ? user.id : null;
-// }
-// async function getServiceIdByName(name: string) {
-//   if (!name) return null;
-//   const service = await prisma.service.findFirst({ where: { name } });
-//   return service ? service.id : null;
-// }
+// // PUT pour modifier un projet
 
-// async function getProjectIdByName(name: string) {
-//   if (!name) return null;
-//   const project = await prisma.project.findFirst({ where: { name } });
-//   return project ? project.id : null;
-// }
+export async function PUT(request: Request, context: { params: { id: string } }) {
+  try {
+    const { id } = context.params;
+    const body = await request.json();
 
-// export async function PUT(request: Request, context: { params: { id: string } }) {
-//   try {
-//     const { id } = context.params;
-//     const body = await request.json();
+    const updateData = {
+      status: body.status || "EN_COURS",
+      budget: body.budget,
+      startDate: body.startDate ? new Date(body.startDate) : undefined,
+      endDate: body.endDate ? new Date(body.endDate) : undefined,
+      devisNumber: body.devisNumber,
+      updatedAt: new Date(),
+    };
 
-//     console.log("📩 Données reçues :", body);
+    console.log("➡️ Données à mettre à jour :", updateData);
 
-//     const supplierId = await getSupplierIdByName(body.supplierId);
-//     const serviceId = await getServiceIdByName(body.serviceId);
-//     const projectId = await getProjectIdByName(body.projectId);
-//     const userId = await getUserIdByName(body.userId);
-//     console.log("🔗 ID du fournisseur trouvé :", supplierId);
+    const updateExpense = await prisma.project.update({
+      where: { id },
+      data: updateData,
+    });
 
-//     if (body.supplierId && !supplierId) {
-//       return NextResponse.json(
-//         { error: `Fournisseur '${body.supplierId}' non trouvé.` },
-//         { status: 400 }
-//       );
-//     }
-
-//     const updateData = {
-//       libelle: body.libelle,
-//       rubrique: body.rubrique,
-//       beneficiaire: body.beneficiaire,
-//       amount: body.amount,
-//       userId: userId || undefined,
-//       supplierId: supplierId || null,
-//       projectId: projectId || undefined,
-//       serviceId: serviceId || undefined,
-//       updatedAt: new Date(),
-//     };
-
-//     console.log("➡️ Données à mettre à jour :", updateData);
-
-//     const updateExpense = await prisma.expense.update({
-//       where: { id },
-//       data: updateData,
-//     });
-
-//     return NextResponse.json(updateExpense, { status: 200 });
-//   } catch (error) {
-//     console.error("❌ Erreur lors de l'update :", error);
-//     return NextResponse.json({ error: "Erreur lors de la mise à jour." }, { status: 500 });
-//   }
-// }
+    return NextResponse.json(updateExpense, { status: 200 });
+  } catch (error) {
+    console.error("❌ Erreur lors de l'update :", error);
+    return NextResponse.json({ error: "Erreur lors de la mise à jour." }, { status: 500 });
+  }
+}
 
 // export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
 //   const { id } = await context.params;

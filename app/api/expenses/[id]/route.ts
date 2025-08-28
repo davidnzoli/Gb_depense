@@ -3,25 +3,76 @@ import { NextRequest } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 
-export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
-  const { id } = await context.params;
+// export async function GET(request: Request, context: { params: Promise<{ id: string, projectName: string }> }) {
+//   const { id, projectName } = await context.params;
+
+//   if (!id) {
+//     return NextResponse.json({ error: "ID non fourni." }, { status: 400 });
+//   }
+//   if (!projectName) {
+//     return NextResponse.json({ error: "Nom du projet non fourni." }, { status: 400 });
+//   }
+
+//   const expense = await prisma.expense.findUnique({
+//     where: { id },
+//     include: {
+//       supplier: true,
+//     },
+//   });
+
+//   if (!expense) {
+//     return NextResponse.json({ error: "Dépense introuvable." }, { status: 404 });
+//   }
+//   return NextResponse.json({
+//     ...expense,
+//     supplierName: expense.supplier?.name ?? null,
+
+//   });
+// }
+
+export async function GET(
+  request: Request,
+  context: { params: { id: string; projectId: string } }
+) {
+  const { id, projectId } = context.params;
 
   if (!id) {
     return NextResponse.json({ error: "ID non fourni." }, { status: 400 });
   }
+
+  if (!projectId) {
+    return NextResponse.json({ error: "Nom du projet non fourni." }, { status: 400 });
+  }
+
+  // 1️⃣ Récupérer la dépense par ID
   const expense = await prisma.expense.findUnique({
     where: { id },
-    include: {
-      supplier: true,
-    },
+    include: { supplier: true },
   });
 
   if (!expense) {
     return NextResponse.json({ error: "Dépense introuvable." }, { status: 404 });
   }
+
+  // 2️⃣ Récupérer toutes les dépenses liées au projet
+  const projectExpenses = await prisma.expense.findMany({
+    where: { projectId },
+    include: { project: true },
+  });
+
+  // Formater les données des dépenses liées pour ajouter le supplierName
+  const formattedProjectExpenses = projectExpenses.map((e) => ({
+    ...e,
+    projectName: e.project?.name ?? null,
+  }));
+
+  // 3️⃣ Retourner les résultats
   return NextResponse.json({
-    ...expense,
-    supplierName: expense.supplier?.name ?? null,
+    expense: {
+      ...expense,
+      supplierName: expense.supplier?.name ?? null,
+    },
+    projectExpenses: formattedProjectExpenses,
   });
 }
 
@@ -73,6 +124,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
       rubrique: body.rubrique,
       beneficiaire: body.beneficiaire,
       amount: body.amount,
+      devise: body.devise,
       userId: userId || undefined,
       supplierId: supplierId || null,
       projectId: projectId || undefined,

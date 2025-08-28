@@ -29,10 +29,10 @@ interface ItemsDepense {
   id: string;
   date: string;
   libelle: string;
-  rubrique: string;
+  rubriqueName: string;
   beneficiaire: string;
   amount: string;
-  supplier: string;
+  supplierName: string;
 }
 
 interface ItemsSuplier {
@@ -70,7 +70,6 @@ export default function listeDepenses() {
     const resulta = await res.json();
 
     if (!resulta || !Array.isArray(resulta.data)) {
-      console.error("Structure inattendue:", resulta);
       setDepenses([]);
       setRubriques([]);
       setServices([]);
@@ -119,7 +118,7 @@ export default function listeDepenses() {
     <>
       {loading ? (
         <div className="flex justify-center items-center h-full">
-          <Loader2 className="animate-spin h-16 w-15 text-green-500" />
+          <Loader2 className="animate-spin h-16 w-15 text-[#4895b7]" />
         </div>
       ) : (
         <>
@@ -131,7 +130,7 @@ export default function listeDepenses() {
               <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
               <Dialog open={opens} onOpenChange={setOpens}>
                 <DialogTrigger asChild>
-                  <Button className="bg-green-500 cursor-pointer flex items-center">
+                  <Button className="bg-[#4895b7] cursor-pointer flex items-center">
                     Ajouter
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -147,7 +146,7 @@ export default function listeDepenses() {
                 <TableHead className="font-medium">Rubrique</TableHead>
                 <TableHead className="font-center">Montant</TableHead>
                 <TableHead className="font-medium">Libelle</TableHead>
-                <TableHead className="text-right font-medium">Beneficiaire</TableHead>
+                {/* <TableHead className="text-right font-medium">Beneficiaire</TableHead> */}
                 <TableHead className="text-right font-medium">Fournisseur</TableHead>
                 <TableHead className="text-center">ACTIONS</TableHead>
               </TableRow>
@@ -157,11 +156,11 @@ export default function listeDepenses() {
                 currentCategories.map((depense) => (
                   <TableRow key={depense.id} className="border border-gray-200">
                     <TableCell>{depense.date}</TableCell>
-                    <TableCell className="text-left">{depense.rubrique}</TableCell>
+                    <TableCell className="text-left">{depense.rubriqueName}</TableCell>
                     <TableCell className="text-left">{depense.amount}</TableCell>
                     <TableCell className="text-left">{depense.libelle}</TableCell>
-                    <TableCell className="text-left">{depense.beneficiaire}</TableCell>
-                    <TableCell className="text-left">{depense.supplier}</TableCell>
+                    {/* <TableCell className="text-left">{depense.beneficiaire}</TableCell> */}
+                    <TableCell className="text-left">{depense.supplierName}</TableCell>
                     <TableCell className="text-right">
                       <div className="text-center flex items-center justify-center gap-2">
                         <DeleteExpense id={depense.id} onDeletes={handleDelete} />

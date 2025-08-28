@@ -93,7 +93,7 @@ export default function ListeRubrique() {
       <div className="justify-center  items-center w-[100%] h-full">
         {loading ? (
           <div className="flex justify-center items-center h-full">
-            <Loader2 className="animate-spin h-16 w-15 text-green-500" />
+            <Loader2 className="animate-spin h-16 w-15 text-[#4895b7]" />
           </div>
         ) : (
           <>
@@ -109,7 +109,7 @@ export default function ListeRubrique() {
                 <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
                 <Dialog open={opens} onOpenChange={setOpens}>
                   <DialogTrigger asChild>
-                    <Button className="bg-green-500 cursor-pointer flex items-center">
+                    <Button className="bg-[#4895b7] cursor-pointer flex items-center">
                       Ajouter
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>

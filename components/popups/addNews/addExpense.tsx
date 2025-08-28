@@ -27,11 +27,17 @@ import {
 
 import { SelectViewport } from "@radix-ui/react-select";
 
+const Devises = [
+  { code: "USD", name: "Dollar américain" },
+  { code: "CDF", name: "Franc congolais" },
+];
+
 interface Expenses {
   id: string;
   libelle: string;
   rubriqueId: string;
   beneficiaire: string;
+  devise: string;
   amount: string;
   userId: string;
   supplierId: string;
@@ -68,11 +74,14 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
   const [Projects, setProjects] = React.useState<ItemsProject[]>([]);
   const [Services, setServices] = React.useState<ItemsService[]>([]);
   const [Rubriques, setRubriques] = React.useState<ItemsRubrique[]>([]);
+  const [devisNumber, setDevisNumber] = React.useState(Devises);
+  const [devise, setDevise] = React.useState("");
   const [formData, setFormData] = React.useState({
     id: "",
     libelle: "",
     rubriqueId: "",
     beneficiaire: "",
+    devise: "",
     amount: "",
     userId: "",
     supplierId: "",
@@ -152,6 +161,7 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
         libelle: "",
         rubriqueId: "",
         beneficiaire: "",
+        devise: "",
         amount: "",
         userId: "",
         supplierId: "",
@@ -184,16 +194,16 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             value={formData.serviceId}
             onValueChange={(val) => setFormData((prev) => ({ ...prev, serviceId: val }))}
           >
-            <SelectTrigger id="serviceId" className="w-full">
+            <SelectTrigger id="serviceId" className="w-[90%] h-12">
               <SelectValue placeholder="Sélectionner un service" />
             </SelectTrigger>
-            <SelectContent className="w-full">
+            <SelectContent className="w-[90%]">
               <SelectViewport className="max-h-60 overflow-y-auto">
                 {Services.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id || ""}
-                    className="hover:bg-green-500 hover:text-white"
+                    className="hover:bg-[#4895b7] hover:text-white"
                   >
                     {cat.name || "VIDE"}
                   </SelectItem>
@@ -207,16 +217,16 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             value={formData.projectId}
             onValueChange={(val) => setFormData((prev) => ({ ...prev, projectId: val }))}
           >
-            <SelectTrigger id="projectId" className="w-full">
+            <SelectTrigger id="projectId" className="w-[90%] h-12">
               <SelectValue placeholder="Sélectionner le projet" />
             </SelectTrigger>
-            <SelectContent className="w-full">
-              <SelectViewport className="max-h-60 overflow-y-auto">
+            <SelectContent className=" w-[90%] ">
+              <SelectViewport className="max-h-06 w-[90%] overflow-y-auto">
                 {Projects.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id}
-                    className="hover:bg-green-500 hover:text-white"
+                    className="hover:bg-[#4895b7]  hover:text-white"
                   >
                     {cat.name || "VIDE"}
                   </SelectItem>
@@ -235,6 +245,7 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             onChange={handleChange}
             placeholder="Payement outils de menage..."
             required
+            className="w-[90%] h-12"
           />
         </div>
         <div className="grid gap-2">
@@ -242,18 +253,44 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             value={formData.rubriqueId}
             onValueChange={(val) => setFormData((prev) => ({ ...prev, rubriqueId: val }))}
           >
-            <SelectTrigger id="rubrique" className="w-full">
+            <SelectTrigger id="rubrique" className="w-[90%] h-12">
               <SelectValue placeholder="Sélectionner une rubrique" />
             </SelectTrigger>
-            <SelectContent className="w-full">
+            <SelectContent className="w-[90%]">
               <SelectViewport className="max-h-60 overflow-y-auto">
                 {Rubriques.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id}
-                    className="hover:bg-green-500 hover:text-white"
+                    className="hover:bg-[#4895b7] hover:text-white"
                   >
                     {cat.name || "VIDE"}
+                  </SelectItem>
+                ))}
+              </SelectViewport>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="grid gap-2">
+          <Select
+            value={devise}
+            onValueChange={(value) => {
+              console.log("Nouvelle valeur sélectionnée :", value);
+              setDevise(value);
+            }}
+          >
+            <SelectTrigger id="service" className="w-full">
+              <SelectValue placeholder="Sélectionnez une service" />
+            </SelectTrigger>
+            <SelectContent className="w-full">
+              <SelectViewport className="max-h-60 overflow-y-auto">
+                {devisNumber.map((cat) => (
+                  <SelectItem
+                    key={cat.code}
+                    value={String(cat.code)}
+                    className="hover:bg-[#4895b7] hover:text-white"
+                  >
+                    {cat.name} - {cat.code}
                   </SelectItem>
                 ))}
               </SelectViewport>
@@ -270,6 +307,7 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             onChange={handleChange}
             placeholder="Ex: 2500"
             required
+            className="w-[90%] h-12"
           />
         </div>
 
@@ -278,16 +316,16 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             value={formData.supplierId}
             onValueChange={(val) => setFormData((prev) => ({ ...prev, supplierId: val }))}
           >
-            <SelectTrigger id="supplierId" className="w-full">
+            <SelectTrigger id="supplierId" className="w-[90%] h-12">
               <SelectValue placeholder="Sélectionner un fournisseur" />
             </SelectTrigger>
-            <SelectContent className="w-full">
+            <SelectContent className="w-[90%]">
               <SelectViewport className="max-h-60 overflow-y-auto">
                 {Suppliers.map((cat) => (
                   <SelectItem
                     key={cat.id}
                     value={cat.id || ""}
-                    className="hover:bg-green-500 hover:text-white"
+                    className="hover:bg-[#4895b7] hover:text-white"
                   >
                     {cat.email || "VIDE"}
                   </SelectItem>

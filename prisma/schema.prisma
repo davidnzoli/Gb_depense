@@ -64,6 +64,11 @@ model Project {
   userId      String?    // Responsable du projet (utilisateur)
   location       String?    // Localisation ou adresse du projet
   status        ProjectStatus @default(PLANIFIE) // État du projet
+
+  budget         Float?     // Budget estimé
+  devisNumber    String?    // Référence de devis ou contrat
+  startDate      DateTime?   @map("datedebut")
+  endDate        DateTime?   @map("dateFin")
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   expenses       Expense[]
@@ -71,8 +76,8 @@ model Project {
   user        User?      @relation(fields: [userId], references: [id])
   milestones     Milestone[] // Étapes ou jalons du projet
   documents      Document[]  // Plans, photos, contrats
-
 }
+
 enum ProjectStatus {
   PLANIFIE        
   EN_COURS        
@@ -80,10 +85,6 @@ enum ProjectStatus {
   EN_ATTENTE      
   ANNULE          
 }
- // budget         Float?     // Budget estimé
-  // devisNumber    String?    // Référence de devis ou contrat
-  // startDate      DateTime   @map("datedebut")
-  // endDate        DateTime   @map("dateFin")
 
 model Milestone {
   id          String   @id @default(cuid())       // Identifiant unique du jalon
@@ -129,6 +130,7 @@ model Expense {
   projectId    String?
   serviceId    String?
   rubriqueId   String?
+  devise String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   project      Project?  @relation(fields: [projectId], references: [id])

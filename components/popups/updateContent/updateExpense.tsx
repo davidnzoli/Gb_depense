@@ -28,11 +28,17 @@ interface UpdateExpenseItemsProps {
   id: string;
   onUpdate: () => void;
 }
+
+const Devises = [
+  { code: "USD", name: "Dollar américain" },
+  { code: "CDF", name: "Franc congolais" },
+];
 interface Expenses {
   id: string;
   libelle: string;
   rubriqueId: string;
   beneficiaire: string;
+  devise: string;
   amount: string;
   userId: string;
   supplierId: string;
@@ -80,6 +86,8 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
   const [Services, setServices] = React.useState<serviceItems[]>([]);
   const [Users, setUsers] = React.useState<userItems[]>([]);
   const [Rubriques, setRubriques] = React.useState<rubriqueItems[]>([]);
+  const [devisNumber, setDevisNumber] = React.useState(Devises);
+  const [devise, setDevise] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -103,6 +111,7 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
         setlibelle(data.libelle || "");
         setrubrique(data.rubrique || "");
         setbeneficiaire(data.beneficiaire || "");
+        setDevise(data.devise || "");
         setamount(data.amount || "");
         setuserIdItems(data.userIdItems || "");
         setsupplierIdItems(data.supplierIdItems || "");
@@ -127,6 +136,7 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
           libelle,
           rubrique,
           beneficiaire,
+          devise,
           amount: parseFloat(amount),
           userId: userIdItems,
           supplierId: supplierIdItems,
@@ -170,70 +180,13 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
       setSuppliers([]);
     }
   }
-
-  // async function fetchsupplierItems() {
-  //   try {
-  //     const res = await fetch("/api/suppliers");
-  //     const result = await res.json();
-  //     console.log("Réponse brute : ", result);
-
-  //     if (!result || !Array.isArray(result.data)) {
-  //       console.error("Structure inattendue:", result);
-  //       setsupplier([]);
-  //       return;
-  //     }
-
-  //     setsupplier(result.data);
-  //   } catch (error) {
-  //     console.error("Erreur lors de la récupération des fournisseur:", error);
-  //     setsupplier([]);
-  //   }
-  // }
-
-  //   async function fetchsserviceItems() {
-  //   try {
-  //     const res = await fetch("/api/services");
-  //     const result = await res.json();
-  //     console.log("Réponse brute : ", result);
-
-  //     if (!result || !Array.isArray(result.data)) {
-  //       console.error("Structure inattendue:", result);
-  //       setservice([]);
-  //       return;
-  //     }
-
-  //     setservice(result.data);
-  //   } catch (error) {
-  //     console.error("Erreur lors de la récupération des services:", error);
-  //     setservice([]);
-  //   }
-  // }
-
-  //   async function fetchprojectItems() {
-  //     try {
-  //       const res = await fetch("/api/projets");
-  //       const result = await res.json();
-  //       console.log("Réponse brute : ", result);
-
-  //       if (!result || !Array.isArray(result.data)) {
-  //         console.error("Structure inattendue:", result);
-  //         setservice([]);
-  //         return;
-  //       }
-
-  //       setservice(result.data);
-  //     } catch (error) {
-  //       console.error("Erreur lors de la récupération des projets:", error);
-  //       setservice([]);
-  //     }
-  //   }
   React.useEffect(() => {
     fetchExpense();
   }, []);
   return (
     <DialogContent className="animate-in duration-200 ease-out data-[state=openss]:fade-in data-[state=closed]:fade-out">
       <DialogHeader>
-        <DialogTitle>Modifier ce Produit</DialogTitle>
+        <DialogTitle>Modifier cette depense</DialogTitle>
 
         <DialogDescription>
           Remplissez le formulaire ci‑dessous et cliquez sur Enregistrer.
@@ -258,7 +211,7 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
                   <SelectItem
                     key={cat.id}
                     value={String(cat.name)}
-                    className="hover:bg-green-500 hover:text-white"
+                    className="hover:bg-[#4895b7] hover:text-white"
                   >
                     {cat.name}
                   </SelectItem>
@@ -285,7 +238,7 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
                   <SelectItem
                     key={cat.id}
                     value={String(cat.name)}
-                    className="hover:bg-green-500 hover:text-white"
+                    className="hover:bg-[#4895b7] hover:text-white"
                   >
                     {cat.name}
                   </SelectItem>
@@ -329,6 +282,32 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
             className="w-full"
           />
         </div>
+        <div className="grid gap-2">
+          <Select
+            value={devise}
+            onValueChange={(value) => {
+              console.log("Nouvelle valeur sélectionnée :", value);
+              setDevise(value);
+            }}
+          >
+            <SelectTrigger id="service" className="w-full">
+              <SelectValue placeholder="Sélectionnez une service" />
+            </SelectTrigger>
+            <SelectContent className="w-full">
+              <SelectViewport className="max-h-60 overflow-y-auto">
+                {devisNumber.map((cat) => (
+                  <SelectItem
+                    key={cat.code}
+                    value={String(cat.code)}
+                    className="hover:bg-[#4895b7] hover:text-white"
+                  >
+                    {cat.name} - {cat.code}
+                  </SelectItem>
+                ))}
+              </SelectViewport>
+            </SelectContent>
+          </Select>
+        </div>
         <div className="grid gap-2 w-full">
           <Label htmlFor="amount">amount</Label>
           <Input
@@ -358,7 +337,7 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
                   <SelectItem
                     key={cat.id}
                     value={String(cat.name)}
-                    className="hover:bg-green-500 hover:text-white"
+                    className="hover:bg-[#4895b7] hover:text-white"
                   >
                     {cat.email}
                   </SelectItem>

@@ -27,7 +27,7 @@ import { NextResponse } from "next/server";
 //   }
 // }
 
-export async function GET() {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
     const expenses = await prisma.expense.findMany({
       select: {
@@ -36,6 +36,7 @@ export async function GET() {
         beneficiaire: true,
         amount: true,
         date: true,
+        devise: true,
         createdAt: true,
         updatedAt: true,
         service: { select: { name: true } },
@@ -109,7 +110,8 @@ export async function POST(req: Request) {
     const newExpense = await prisma.expense.create({
       data: {
         libelle: body.libelle || null,
-        rubrique: body.rubrique || null,
+        devise: body.devise || null,
+        rubriqueId: body.rubriqueId || null,
         beneficiaire: body.beneficiaire || null,
         amount: parseFloat(body.amount),
         userId: body.userId || null,
@@ -120,8 +122,11 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(newExpense, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("❌ Erreur lors de la création :", error);
-    return NextResponse.json({ error: "Erreur lors de l'ajout de dépense." }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || "Erreur lors de l'ajout de dépense." },
+      { status: 500 }
+    );
   }
 }

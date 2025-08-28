@@ -82,7 +82,7 @@ export default function lIsteservice() {
     <>
       {loading ? (
         <div className="flex justify-center items-center h-full">
-          <Loader2 className="animate-spin h-16 w-15 text-green-500" />
+          <Loader2 className="animate-spin h-16 w-15 text-[#4895b7]" />
         </div>
       ) : (
         <>
@@ -95,7 +95,7 @@ export default function lIsteservice() {
               <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
               <Dialog open={opens} onOpenChange={setOpens}>
                 <DialogTrigger asChild>
-                  <Button className="bg-green-500 cursor-pointer flex items-center">
+                  <Button className="bg-[#4895b7] cursor-pointer flex items-center">
                     Ajouter
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -180,14 +180,14 @@ export default function lIsteservice() {
         </DialogContent> */}
           </Dialog>
           <div className="flex justify-center mt-2">
-                        {services.length > 10 && (
-                          <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                          />
-                        )}
-                      </div>
+            {services.length > 10 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </div>
         </>
       )}
     </>

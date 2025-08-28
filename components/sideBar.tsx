@@ -18,6 +18,7 @@ import {
   Building2,
   Network,
 } from "lucide-react";
+import Image from "next/image";
 
 import { ChevronDown } from "lucide-react";
 
@@ -95,7 +96,16 @@ const menuItems = [
 export default function Sidebar() {
   return (
     <aside className="w-72 h-screen fixed left-0 pt-16 pb-20 top-0 gap-9 items-center  bg-[#1e1e2f] text-white font-poppins font-bold flex flex-col justify-between">
-      <h1 className="text-[20px] text-green-500 font-bold">GB-DEPENSES</h1>
+      {/* <h1 className="text-[20px] text-green-500 font-bold">GB-DEPENSES</h1> */}
+      <div className="flex items-center justify-end gap-2 cursor-pointer">
+        <Image
+          src="/LOGO_KIND_.svg"
+          alt="Mon profil"
+          width={200}
+          height={300}
+          className="rounded-4xl border-1"
+        />
+      </div>
       <ScrollArea className="h-full w-[99%]">
         <nav className="p-4 flex flex-col justify-center items-start gap-2 font-bold ">
           {menuItems.map((item, index) =>

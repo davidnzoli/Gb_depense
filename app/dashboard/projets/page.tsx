@@ -45,7 +45,7 @@ export default function listeProject() {
   const [Projects, setProjects] = useState<ItemsProjects[]>([]);
   const [ProjectsId, setProjectsId] = useState<ItemsProjects[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [categoriesPerPage] = useState(2);
+  const [categoriesPerPage] = useState(7);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   async function fetchProjects() {
@@ -95,7 +95,7 @@ export default function listeProject() {
       <div className="justify-center  items-center w-[100%] h-full">
         {loading ? (
           <div className="flex justify-center items-center h-full">
-            <Loader2 className="animate-spin h-16 w-15 text-green-500" />
+            <Loader2 className="animate-spin h-16 w-15 text-[#4895b7]" />
           </div>
         ) : (
           <>
@@ -104,10 +104,10 @@ export default function listeProject() {
                 <Input type="category" className="w-70" placeholder="Filtrer par nom de projet" />
               </div>
               <div className="flex justify-center items-center gap-2">
-                <Button className="bg-green-950 cursor-pointer flex items-center">Appliquer</Button>
+                <Button className="bg-[#2b5a6c] cursor-pointer flex items-center">Appliquer</Button>
                 <Dialog open={opens} onOpenChange={setOpens}>
                   <DialogTrigger asChild>
-                    <Button className="bg-green-500 cursor-pointer flex items-center">
+                    <Button className="bg-[#4895b7] cursor-pointer flex items-center">
                       Ajouter
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -136,10 +136,12 @@ export default function listeProject() {
                 {currentCategories && currentCategories.length > 0 ? (
                   currentCategories.map((projet) => (
                     <TableRow key={projet.id} className="border border-gray-200">
-                      <TableCell>{projet.name}</TableCell>
-                      <TableCell className="text-left">{projet.serviceName}</TableCell>
-                      <TableCell className="text-left">{projet.clients}</TableCell>
-                      <TableCell className="text-left">{projet.status}</TableCell>
+                      <TableCell className=" text-gray-700">{projet.name}</TableCell>
+                      <TableCell className="text-left text-gray-700">
+                        {projet.serviceName}
+                      </TableCell>
+                      <TableCell className="text-left text-gray-700">{projet.clients}</TableCell>
+                      <TableCell className="text-left text-gray-700">{projet.status}</TableCell>
                       <TableCell className="text-right">
                         <div className="text-center flex items-center justify-center space-x-2">
                           <DeleteExpense id={projet.id} onDeletes={handleDelete} />
@@ -148,7 +150,7 @@ export default function listeProject() {
                               variant="outline"
                               className="flex items-center border-1 border-gray-100 cursor-pointer"
                             >
-                              <Eye className="h-5 w-5 text-green-500" />
+                              <Eye className="h-5 w-5 text-[#4895b7]" />
                             </Button>
                           </Link>
 
@@ -181,7 +183,7 @@ export default function listeProject() {
                 )}
               </TableBody>
             </Table>
-             <div className="flex w-[100%] mt-2">
+            <div className="flex w-[100%] mt-2">
               {Projects.length > 2 && (
                 <Pagination
                   currentPage={currentPage}
@@ -202,7 +204,6 @@ export default function listeProject() {
                 )}
               </DialogContent>
             </Dialog>
-           
           </>
         )}
       </div>
