@@ -273,11 +273,9 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
         </div>
         <div className="grid gap-2">
           <Select
-            value={devise}
-            onValueChange={(value) => {
-              console.log("Nouvelle valeur sélectionnée :", value);
-              setDevise(value);
-            }}
+            value={formData.devise}
+           
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, devise: val }))}
           >
             <SelectTrigger id="service" className="w-full">
               <SelectValue placeholder="Sélectionnez une service" />

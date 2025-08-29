@@ -25,6 +25,7 @@ import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import ConfigProject from "@/components/popups/updateContent/configProject";
 import { Item } from "@radix-ui/react-select";
+import DocumentUpload from "@/components/popups/addNews/uploadFiles";
 
 interface ItemsProjects {
   id: string;
@@ -52,18 +53,38 @@ interface ItemsDepense {
   supplier: string;
 }
 
+interface Document {
+  id: string;
+  title: string;
+  fileUrl: string;
+  type?: string;
+  projectId: string;
+}
+
+interface ProjectDocumentsProps {
+  documents: Document[];
+}
+
+
 export default function projectSetting() {
   const [loading, setLoading] = useState(true);
   const [opens, setOpens] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoriesPerPage] = useState(7);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [projects, setProjects] = useState<ItemsProjects | null>(null);
   const [expenses, setExpense] = useState<ItemsDepense[]>([]);
+  const [document, setDocument] = useState<Document[]>([]);
   const [totalUSD, setTotalUSD] = useState<number>(0);
   const [totalCDF, setTotalCDF] = useState<number>(0);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [showUpload, setShowUpload] = useState(false);
+const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const { id } = useParams<{ id: string }>();
 
+  //  if (!documents || documents.length === 0) return <div>Aucun document</div>;
   async function fetchProjectId(id: string) {
     setLoading(true);
     try {
@@ -78,9 +99,11 @@ export default function projectSetting() {
       const resExpense = await fetch(`/api/projects/${id}/expenses`);
       const dataExpense = await resExpense.json();
 
-      setExpense(dataExpense.data || []);
-      console.log("les donnees sont : ", dataExpense);
+      
 
+      setExpense(dataExpense.data || []);
+     
+      console.log("les donnees expense sont : ", dataExpense);
       setProjects(data);
       setLoading(false);
     } catch (error) {
@@ -88,6 +111,34 @@ export default function projectSetting() {
       return null;
     }
   }
+
+  useEffect(() => {
+  if (!id) return;
+  const fetchDocuments = async () => {
+    try {
+      const res = await fetch(`/api/projects/${id}/documents`);
+
+if (!res.ok) {
+  console.error("Erreur serveur", res.status);
+  return;
+}
+
+let data;
+try {
+  data = await res.json();
+} catch (err) {
+  console.error("Réponse vide ou non JSON");
+  return;
+}
+
+setDocuments(data.data || []);
+
+    } catch (error) {
+      console.error("Erreur récupération documents:", error);
+    }
+  };
+  fetchDocuments();
+}, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -297,10 +348,81 @@ useEffect(() => {
               </div>
             </div>
           </div>
-          <div className="w-[100%] flex flex-col justify-start items-start gap-3">
-            <h1>DOCUMENTS ET FICHIERS</h1>
-            <div className="w-[100%] h-96 border-1 border-gray-400 border-dashed p-40 rounded-2xl"></div>
-          </div>
+          {projects && (
+  <div className="w-[100%] flex flex-col justify-start items-start gap-3">
+    <h1 className="text-lg font-semibold">DOCUMENTS ET FICHIERS</h1>
+
+    {/* Upload form */}
+    <form
+      className="flex items-center gap-3"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (!projects?.id) return;
+        const formData = new FormData();
+        if (selectedFile) {
+          formData.append("file", selectedFile);
+          formData.append("projectId", projects.id);
+
+          try {
+            const res = await fetch("/api/upload", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (!res.ok) throw new Error("Erreur lors de l'upload");
+
+            const newDoc = await res.json();
+
+            // Mettre à jour l’état local
+            setDocuments((prev) => [...prev, newDoc]);
+            setSelectedFile(null);
+          } catch (error) {
+            console.error("Upload échoué :", error);
+          }
+        }
+      }}
+    >
+      <Input
+        type="file"
+        onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+        className="w-[300px]"
+      />
+      <Button type="submit" className="bg-[#4895b7] text-white">
+        Upload
+      </Button>
+    </form>
+
+    {/* Zone d’affichage des documents */}
+    <div className="w-[100%] min-h-48 border-1 border-gray-400 border-dashed p-6 rounded-2xl">
+      {documents.length === 0 ? (
+        <div className="flex flex-col justify-center items-center text-[#1e1e2f] text-base">
+          <img
+            src="/undraw_no-data_ig65.svg"
+            className="w-32 h-32 mb-4"
+            alt="no-docs"
+          />
+          Aucun document pour ce projet
+        </div>
+      ) : (
+        <ul className="list-disc pl-6 space-y-2">
+          {documents.map((doc) => (
+            <li key={doc.id}>
+              <a
+                href={doc.fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#4895b7] underline"
+              >
+                {doc.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+)}
+
 
           <div className="w-[100%] flex flex-col justify-start items-start gap-3">
             <h1>DEPENSES EFFECTUEZ SUR CE PROJET</h1>

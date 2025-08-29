@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import * as React from "react";
@@ -9,8 +11,6 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-
-import { SelectViewport } from "@radix-ui/react-select";
 import {
   Select,
   SelectContent,
@@ -21,7 +21,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
 interface UpdateExpenseItemsProps {
   onClose: () => void;
@@ -33,97 +32,65 @@ const Devises = [
   { code: "USD", name: "Dollar américain" },
   { code: "CDF", name: "Franc congolais" },
 ];
-interface Expenses {
-  id: string;
-  libelle: string;
-  rubriqueId: string;
-  beneficiaire: string;
-  devise: string;
-  amount: string;
-  userId: string;
-  supplierId: string;
-  projectId: string;
-  serviceId: string;
-  rubriqueName: string;
-  serviceName?: string;
-  projectName?: string;
-  supplierName?: string;
-}
-interface supplierItems {
-  id: string;
-  name: string;
-  email: string;
-}
-interface projectItems {
-  id: string;
-  name: string;
-}
-interface serviceItems {
-  id: string;
-  name: string;
-  campany: string;
-}
-interface userItems {
-  id: string;
-  name: string;
-}
-interface rubriqueItems {
-  id: string;
-  name: string;
-}
+
 export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseItemsProps) {
-  const [Expense, setExpense] = React.useState<Expenses[]>([]);
-  const [libelle, setlibelle] = React.useState("");
-  const [rubrique, setrubrique] = React.useState("");
-  const [beneficiaire, setbeneficiaire] = React.useState("");
-  const [amount, setamount] = React.useState("");
-  const [userIdItems, setuserIdItems] = React.useState("");
-  const [supplierIdItems, setsupplierIdItems] = React.useState<string>("");
-  const [serviceIdItems, setserviceIdItems] = React.useState("");
-  const [projectIdItems, setprojectIdItems] = React.useState("");
-  const [Suppliers, setSuppliers] = React.useState<supplierItems[]>([]);
-  const [Projects, setProjects] = React.useState<projectItems[]>([]);
-  const [Services, setServices] = React.useState<serviceItems[]>([]);
-  const [Users, setUsers] = React.useState<userItems[]>([]);
-  const [Rubriques, setRubriques] = React.useState<rubriqueItems[]>([]);
-  const [devisNumber, setDevisNumber] = React.useState(Devises);
+  const [libelle, setLibelle] = React.useState("");
+  const [rubriqueName, setRubriqueName] = React.useState("");
+  const [beneficiaire, setBeneficiaire] = React.useState("");
+  const [amount, setAmount] = React.useState("");
+  const [userName, setUserName] = React.useState("");
+  const [supplierName, setSupplierName] = React.useState("");
+  const [serviceName, setServiceName] = React.useState("");
+  const [projectName, setProjectName] = React.useState("");
   const [devise, setDevise] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
+  const [Suppliers, setSuppliers] = React.useState<{ email: string,id:string }[]>([]);
+  const [Rubriques, setRubriques] = React.useState<{ name: string,id:string }[]>([]);
+  const [Projects, setProjects] = React.useState<{ name: string,id:string }[]>([]);
+  const [Services, setServices] = React.useState<{ name: string,id:string }[]>([]);
+  const [Users, setUsers] = React.useState<{ name: string,id:string }[]>([]);
+
+  // Charger une dépense
   React.useEffect(() => {
-    const fetchExpenses = async () => {
+    const fetchExpense = async () => {
       try {
         const res = await fetch(`/api/expenses/${id}`);
-        if (!res.ok) {
-          let errorData;
-          try {
-            errorData = await res.json();
-          } catch (err) {
-            errorData = { message: "Réponse vide ou invalide" };
-          }
-          console.error("Erreur côté serveur:", errorData);
-          return;
-        }
-
+        if (!res.ok) return;
         const data = await res.json();
-        console.log("Succès:", data);
+        console.log("les data",data)
 
-        setlibelle(data.libelle || "");
-        setrubrique(data.rubrique || "");
-        setbeneficiaire(data.beneficiaire || "");
+        setLibelle(data.libelle || "");
+        setBeneficiaire(data.beneficiaire || "");
         setDevise(data.devise || "");
-        setamount(data.amount || "");
-        setuserIdItems(data.userIdItems || "");
-        setsupplierIdItems(data.supplierIdItems || "");
-        setserviceIdItems(data.serviceIdItems || "");
-        setprojectIdItems(data.projectIdItems || "");
+        setAmount(data.amount ? String(data.amount) : "");
+        setRubriqueName(data.rubriqueName || "");
+        setUserName(data.userName || "");
+        setSupplierName(data.supplierName || "");
+        setServiceName(data.serviceName || "");
+        setProjectName(data.projectName || "");
       } catch (error) {
         console.error("Erreur lors du chargement de expense", error);
       }
     };
 
-    if (id) fetchExpenses();
+    if (id) fetchExpense();
   }, [id]);
+
+  // Charger les listes
+  React.useEffect(() => {
+    async function fetchLists() {
+      const res = await fetch("/api/expenses");
+      const result = await res.json();
+      console.log("suppliers sont : ", result.suppliers)
+      setRubriques(result.rubriques || []);
+      setServices(result.services || []);
+      setProjects(result.projects || []);
+      setSuppliers(result.suppliers || []);
+      setUsers(result.users || []);
+    }
+    fetchLists();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,19 +101,19 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           libelle,
-          rubrique,
+          rubriqueName,
           beneficiaire,
           devise,
           amount: parseFloat(amount),
-          userId: userIdItems,
-          supplierId: supplierIdItems,
-          projectId: projectIdItems,
-          serviceId: serviceIdItems,
+          userName,
+          supplierName,
+          projectName,
+          serviceName,
         }),
       });
       onUpdate();
       onClose();
-      toast.success("Produit modifié avec succès ✅");
+      toast.success("Dépense modifiée avec succès ✅");
     } catch (error) {
       console.error("Erreur de mise à jour :", error);
     } finally {
@@ -154,204 +121,134 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
     }
   };
 
-  async function fetchExpense() {
-    try {
-      const res = await fetch("/api/expenses");
-      const result = await res.json();
-      console.log("Réponse brute : ", result);
-
-      if (!result || !Array.isArray(result.data)) {
-        console.error("Structure inattendue:", result);
-        setExpense([]);
-        return;
-      }
-
-      setExpense(result.data);
-      setRubriques(result.rubriques);
-      setServices(result.services);
-      setProjects(result.projects);
-      setSuppliers(result.suppliers);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des depense:", error);
-      setExpense([]);
-      setRubriques([]);
-      setServices([]);
-      setProjects([]);
-      setSuppliers([]);
-    }
-  }
-  React.useEffect(() => {
-    fetchExpense();
-  }, []);
   return (
-    <DialogContent className="animate-in duration-200 ease-out data-[state=openss]:fade-in data-[state=closed]:fade-out">
+    <DialogContent>
       <DialogHeader>
-        <DialogTitle>Modifier cette depense</DialogTitle>
-
+        <DialogTitle>Modifier cette dépense</DialogTitle>
         <DialogDescription>
-          Remplissez le formulaire ci‑dessous et cliquez sur Enregistrer.
+          Remplissez le formulaire ci-dessous et cliquez sur Enregistrer.
         </DialogDescription>
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+        {/* Service */}
         <div className="grid gap-2">
-          <Select
-            value={serviceIdItems}
-            onValueChange={(value) => {
-              console.log("Nouvelle valeur sélectionnée :", value);
-              setserviceIdItems(value);
-            }}
-          >
-            <SelectTrigger id="service" className="w-full">
-              <SelectValue placeholder="Sélectionnez une service" />
+          <Select value={serviceName} onValueChange={setServiceName}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sélectionnez un service" />
             </SelectTrigger>
-            <SelectContent className="w-full">
-              <SelectViewport className="max-h-60 overflow-y-auto">
-                {Services.map((cat) => (
-                  <SelectItem
-                    key={cat.id}
-                    value={String(cat.name)}
-                    className="hover:bg-[#4895b7] hover:text-white"
-                  >
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectViewport>
+            <SelectContent>
+              {Services.map((s) => (
+                <SelectItem key={s.id} value={s.name}>
+                  {s.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
 
+        {/* Projet */}
         <div className="grid gap-2">
-          <Select
-            value={projectIdItems}
-            onValueChange={(value) => {
-              console.log("Nouvelle valeur sélectionnée :", value);
-              setprojectIdItems(value);
-            }}
-          >
-            <SelectTrigger id="project" className="w-full">
-              <SelectValue placeholder="Sélectionnez une projet" />
+          <Select value={projectName} onValueChange={setProjectName}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sélectionnez un projet" />
             </SelectTrigger>
-            <SelectContent className="w-full">
-              <SelectViewport className="max-h-60 overflow-y-auto">
-                {Projects.map((cat) => (
-                  <SelectItem
-                    key={cat.id}
-                    value={String(cat.name)}
-                    className="hover:bg-[#4895b7] hover:text-white"
-                  >
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectViewport>
+            <SelectContent>
+              {Projects.map((p) => (
+                <SelectItem key={p.id} value={p.name}>
+                  {p.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
+        {/* Rubrique */}
         <div className="grid gap-2">
-          <Select
-            value={rubrique}
-            onValueChange={(value) => {
-              console.log("Nouvelle valeur sélectionnée :", value);
-              setsupplierIdItems(value);
-            }}
-          >
-            <SelectTrigger id="rubrique" className="w-full">
+          <Select value={rubriqueName} onValueChange={setRubriqueName}>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Sélectionnez une rubrique" />
             </SelectTrigger>
-            <SelectContent className="w-full">
-              <SelectViewport className="max-h-60 overflow-y-auto">
-                {Rubriques.map((cat) => (
-                  <SelectItem
-                    value={String(cat.name)}
-                    className="hover:bg-green-500 hover:text-white"
-                  ></SelectItem>
-                ))}
-              </SelectViewport>
+            <SelectContent>
+              {Rubriques.map((r) => (
+                <SelectItem key={r.id} value={r.name}>
+
+                  {r.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
+        {/* Libellé */}
         <div className="grid gap-2 w-full">
-          <Label htmlFor="libelle">libelle</Label>
+          <Label htmlFor="libelle">Libellé</Label>
           <Input
             id="libelle"
-            name="libelle"
-            type="text"
             value={libelle}
-            onChange={(e) => setlibelle(e.target.value)}
+            onChange={(e) => setLibelle(e.target.value)}
             required
-            className="w-full"
           />
         </div>
+         {/* Utilisateur */}
         <div className="grid gap-2">
-          <Select
-            value={devise}
-            onValueChange={(value) => {
-              console.log("Nouvelle valeur sélectionnée :", value);
-              setDevise(value);
-            }}
-          >
-            <SelectTrigger id="service" className="w-full">
-              <SelectValue placeholder="Sélectionnez une service" />
+          <Select value={userName} onValueChange={setUserName}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sélectionnez un agent de suivis" />
             </SelectTrigger>
-            <SelectContent className="w-full">
-              <SelectViewport className="max-h-60 overflow-y-auto">
-                {devisNumber.map((cat) => (
-                  <SelectItem
-                    key={cat.code}
-                    value={String(cat.code)}
-                    className="hover:bg-[#4895b7] hover:text-white"
-                  >
-                    {cat.name} - {cat.code}
-                  </SelectItem>
-                ))}
-              </SelectViewport>
+            <SelectContent>
+              {Users.map((u) => (
+                <SelectItem key={u.id} value={u.id}>
+                  {u.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
+        {/* Devise */}
+        <div className="grid gap-2">
+          <Select value={devise} onValueChange={setDevise}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sélectionnez une devise" />
+            </SelectTrigger>
+            <SelectContent>
+              {Devises.map((d) => (
+                <SelectItem key={d.code} value={d.code}>
+                  {d.name} - {d.code}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {/* Montant */}
         <div className="grid gap-2 w-full">
-          <Label htmlFor="amount">amount</Label>
+          <Label htmlFor="amount">Montant</Label>
           <Input
             id="amount"
-            name="amount"
             type="number"
             value={amount}
-            onChange={(e) => setamount(e.target.value)}
+            onChange={(e) => setAmount(e.target.value)}
             required
-            className="w-full"
           />
         </div>
+        {/* Fournisseur */}
         <div className="grid gap-2">
-          <Select
-            value={supplierIdItems}
-            onValueChange={(value) => {
-              console.log("Nouvelle valeur sélectionnée :", value);
-              setsupplierIdItems(value);
-            }}
-          >
-            <SelectTrigger id="supplier" className="w-full">
-              <SelectValue placeholder="Sélectionnez une supplier" />
+          <Select value={supplierName} onValueChange={setSupplierName}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sélectionnez un fournisseur" />
             </SelectTrigger>
-            <SelectContent className="w-full">
-              <SelectViewport className="max-h-60 overflow-y-auto">
-                {Suppliers.map((cat) => (
-                  <SelectItem
-                    key={cat.id}
-                    value={String(cat.name)}
-                    className="hover:bg-[#4895b7] hover:text-white"
-                  >
-                    {cat.email}
-                  </SelectItem>
-                ))}
-              </SelectViewport>
+            <SelectContent>
+              {Suppliers.map((s) => (
+                <SelectItem key={s.id} value={s.email}>
+                  {s.email}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-        <DialogFooter className="mt-4 flex flex-col sm:flex-row gap-2 sm:justify-end">
+        <DialogFooter className="mt-4 flex gap-2 justify-end">
           <Button variant="outline" type="button" onClick={onClose}>
             Annuler
           </Button>
           <Button type="submit" disabled={loading}>
-            {" "}
             {loading ? "Enregistrement..." : "Enregistrer"}
           </Button>
         </DialogFooter>
