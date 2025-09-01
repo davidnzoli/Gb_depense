@@ -73,7 +73,7 @@ type Props = {
   projectName: string;
   expense: ItemsDepense[];
 };
-export default function projectSetting({ projectName, expense }: Props){
+export default function projectSetting({ projectName, expense }: Props) {
   const [loading, setLoading] = useState(true);
   const [opens, setOpens] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -88,9 +88,7 @@ export default function projectSetting({ projectName, expense }: Props){
   const [showUpload, setShowUpload] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-
-    const generatePdf = async () => {
-
+  const generatePdf = async () => {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([600, 800]);
 
@@ -335,11 +333,13 @@ export default function projectSetting({ projectName, expense }: Props){
               <h1 className=" bg-[#f2f2f5] p-4 rounded-[50%] text-red-500">
                 <BadgeDollarSign className="w-10 h-10" />
               </h1>
-              {projects?.budget != null? (
+              {projects?.budget != null ? (
                 <h1 className="font-bold text-2xl text-[#393944]">
                   {projects.budget} {projects.devisNumber}
                 </h1>
-              ):<h1 className="font-bold text-2xl text-[#393944]">$ 0.00</h1>}
+              ) : (
+                <h1 className="font-bold text-2xl text-[#393944]">$ 0.00</h1>
+              )}
 
               <div className=" w-[100%] gap-1 flex justify-between items-center text-center">
                 <h1 className="font-bold text-sm text-[#1e1e2f]">Budget</h1>
@@ -451,7 +451,10 @@ export default function projectSetting({ projectName, expense }: Props){
                   <div className="w-[100%] flex justify-between items-center gap-3">
                     {documents.map((doc) => {
                       const isImage = /\.(jpg|jpeg|png|gif|svg|heic|webp)$/i.test(doc.fileUrl);
-                      const isPdf = /\.pdf$/i.test(doc.fileUrl) || /\.txt$/i.test(doc.fileUrl) || /\.docx$/i.test(doc.fileUrl);
+                      const isPdf =
+                        /\.pdf$/i.test(doc.fileUrl) ||
+                        /\.txt$/i.test(doc.fileUrl) ||
+                        /\.docx$/i.test(doc.fileUrl);
 
                       return (
                         <div
@@ -507,21 +510,21 @@ export default function projectSetting({ projectName, expense }: Props){
 
           <div className="w-[100%] flex flex-col justify-start items-start gap-3">
             <div className="flex w-[100%] justify-between items-start gap-3">
-
               <h1>DEPENSES EFFECTUEZ SUR CE PROJET</h1>
-              {currentCategories && currentCategories.length > 0 ? 
-               <Button
-                            variant="outline"
-                            
-                            onClick={generatePdf}
-                            className="flex items-center border-1 p-3 border-gray-100 text-white font-bold bg-[#1e1e2f] hover:text-[#1e1e2f] cursor-pointer"
-                          >
-                            PDF
-                            <FileChartColumnIncreasing className="h-6 w-6  hover:text-[#1e1e2f] hover:border-[#1e1e2f] " />
-                          </Button>:""}
-              
+              {currentCategories && currentCategories.length > 0 ? (
+                <Button
+                  variant="outline"
+                  onClick={generatePdf}
+                  className="flex items-center border-1 p-3 border-gray-100 text-white font-bold bg-[#1e1e2f] hover:text-[#1e1e2f] cursor-pointer"
+                >
+                  PDF
+                  <FileChartColumnIncreasing className="h-6 w-6  hover:text-[#1e1e2f] hover:border-[#1e1e2f] " />
+                </Button>
+              ) : (
+                ""
+              )}
             </div>
-            
+
             {currentCategories && currentCategories.length > 0 ? (
               <Table className="border border-gray-200">
                 <TableHeader className="border border-gray-200">
@@ -560,14 +563,14 @@ export default function projectSetting({ projectName, expense }: Props){
                             variant="outline"
                             className="flex items-center border-1 border-gray-100 cursor-pointer"
                           >
-                            <Printer  className="h-5 w-5 text-[#4895b7]" />
+                            <Printer className="h-5 w-5 text-[#4895b7]" />
                           </Button>
-                          
+
                           <Button
                             variant="outline"
                             className="flex items-center cursor-pointer border-1 border-gray-100"
                           >
-                            <Trash  className="h-5 w-5 text-red-500" />
+                            <Trash className="h-5 w-5 text-red-500" />
                           </Button>
                         </div>
                       </TableCell>

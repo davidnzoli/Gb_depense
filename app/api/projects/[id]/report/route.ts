@@ -19,7 +19,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         service: { select: { name: true } },
         supplier: { select: { email: true } },
       },
-      orderBy: { date: 'asc' },
+      orderBy: { date: "asc" },
     });
 
     // Créer le PDF

@@ -17,7 +17,7 @@ export async function GET() {
         supplier: { select: { email: true } },
         project: { select: { name: true } },
       },
-      orderBy: { date: 'asc' },
+      orderBy: { date: "asc" },
     });
 
     // Créer le PDF
@@ -37,7 +37,16 @@ export async function GET() {
     });
 
     // En-tête du tableau
-    const headers = ["Date", "Libellé", "Montant", "Devise", "Rubrique", "Service", "Fournisseur", "Projet"];
+    const headers = [
+      "Date",
+      "Libellé",
+      "Montant",
+      "Devise",
+      "Rubrique",
+      "Service",
+      "Fournisseur",
+      "Projet",
+    ];
     let yPos = height - 80;
     headers.forEach((header, i) => {
       page.drawText(header, { x: 50 + i * 80, y: yPos, size: fontSize, font, color: rgb(0, 0, 0) });
