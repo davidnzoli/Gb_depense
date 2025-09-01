@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import * as React from "react";
@@ -45,11 +43,11 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
   const [devise, setDevise] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
-  const [Suppliers, setSuppliers] = React.useState<{ email: string,id:string }[]>([]);
-  const [Rubriques, setRubriques] = React.useState<{ name: string,id:string }[]>([]);
-  const [Projects, setProjects] = React.useState<{ name: string,id:string }[]>([]);
-  const [Services, setServices] = React.useState<{ name: string,id:string }[]>([]);
-  const [Users, setUsers] = React.useState<{ name: string,id:string }[]>([]);
+  const [Suppliers, setSuppliers] = React.useState<{ email: string; id: string }[]>([]);
+  const [Rubriques, setRubriques] = React.useState<{ name: string; id: string }[]>([]);
+  const [Projects, setProjects] = React.useState<{ name: string; id: string }[]>([]);
+  const [Services, setServices] = React.useState<{ name: string; id: string }[]>([]);
+  const [Users, setUsers] = React.useState<{ name: string; id: string }[]>([]);
 
   // Charger une dépense
   React.useEffect(() => {
@@ -58,7 +56,7 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
         const res = await fetch(`/api/expenses/${id}`);
         if (!res.ok) return;
         const data = await res.json();
-        console.log("les data",data)
+        console.log("les data", data);
 
         setLibelle(data.libelle || "");
         setBeneficiaire(data.beneficiaire || "");
@@ -82,7 +80,7 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
     async function fetchLists() {
       const res = await fetch("/api/expenses");
       const result = await res.json();
-      console.log("suppliers sont : ", result.suppliers)
+      console.log("suppliers sont : ", result.suppliers);
       setRubriques(result.rubriques || []);
       setServices(result.services || []);
       setProjects(result.projects || []);
@@ -171,7 +169,6 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
             <SelectContent>
               {Rubriques.map((r) => (
                 <SelectItem key={r.id} value={r.name}>
-
                   {r.name}
                 </SelectItem>
               ))}
@@ -188,7 +185,7 @@ export default function UpdatedExpense({ onClose, id, onUpdate }: UpdateExpenseI
             required
           />
         </div>
-         {/* Utilisateur */}
+        {/* Utilisateur */}
         <div className="grid gap-2">
           <Select value={userName} onValueChange={setUserName}>
             <SelectTrigger className="w-full">

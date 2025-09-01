@@ -14,7 +14,15 @@ import { DialogContent } from "@/components/ui/dialog";
 import { Dialog, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowRight, ArrowUp, BadgeDollarSign, BanknoteArrowDown } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUp,
+  BadgeDollarSign,
+  BanknoteArrowDown,
+  BookAlert,
+  FileText,
+} from "lucide-react";
 import Pagination from "@/components/pagination";
 import { Trash, Edit, Loader2, Pencil, Eye } from "lucide-react";
 import AddExpense from "@/components/popups/addNews/addExpense";
@@ -25,7 +33,6 @@ import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import ConfigProject from "@/components/popups/updateContent/configProject";
 import { Item } from "@radix-ui/react-select";
-import DocumentUpload from "@/components/popups/addNews/uploadFiles";
 
 interface ItemsProjects {
   id: string;
@@ -55,16 +62,11 @@ interface ItemsDepense {
 
 interface Document {
   id: string;
-  title: string;
+  titre: string;
   fileUrl: string;
   type?: string;
   projectId: string;
 }
-
-interface ProjectDocumentsProps {
-  documents: Document[];
-}
-
 
 export default function projectSetting() {
   const [loading, setLoading] = useState(true);
@@ -75,12 +77,11 @@ export default function projectSetting() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [projects, setProjects] = useState<ItemsProjects | null>(null);
   const [expenses, setExpense] = useState<ItemsDepense[]>([]);
-  const [document, setDocument] = useState<Document[]>([]);
   const [totalUSD, setTotalUSD] = useState<number>(0);
   const [totalCDF, setTotalCDF] = useState<number>(0);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [showUpload, setShowUpload] = useState(false);
-const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { id } = useParams<{ id: string }>();
 
@@ -99,10 +100,8 @@ const [selectedFile, setSelectedFile] = useState<File | null>(null);
       const resExpense = await fetch(`/api/projects/${id}/expenses`);
       const dataExpense = await resExpense.json();
 
-      
-
       setExpense(dataExpense.data || []);
-     
+
       console.log("les donnees expense sont : ", dataExpense);
       setProjects(data);
       setLoading(false);
@@ -113,32 +112,28 @@ const [selectedFile, setSelectedFile] = useState<File | null>(null);
   }
 
   useEffect(() => {
-  if (!id) return;
-  const fetchDocuments = async () => {
-    try {
-      const res = await fetch(`/api/projects/${id}/documents`);
+    if (!id) return;
+    const fetchDocuments = async () => {
+      try {
+        const res = await fetch(`/api/projects/${id}/documents`);
 
-if (!res.ok) {
-  console.error("Erreur serveur", res.status);
-  return;
-}
+        let data;
+        try {
+          data = await res.json();
+        } catch (err) {
+          console.error("Réponse vide ou non JSON");
+          return;
+        }
 
-let data;
-try {
-  data = await res.json();
-} catch (err) {
-  console.error("Réponse vide ou non JSON");
-  return;
-}
+        console.log("resultat de data :", data || []);
 
-setDocuments(data.data || []);
-
-    } catch (error) {
-      console.error("Erreur récupération documents:", error);
-    }
-  };
-  fetchDocuments();
-}, [id]);
+        setDocuments(data || []);
+      } catch (error) {
+        console.error("Erreur récupération documents:", error);
+      }
+    };
+    fetchDocuments();
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -168,22 +163,22 @@ setDocuments(data.data || []);
 
   useEffect(() => {
     if (Array.isArray(expenses)) {
-       const totalUSD = expenses
-      .filter(item => item.devise === "USD")
-      .reduce((acc, item) => acc + Number(item.amount || 0), 0);
+      const totalUSD = expenses
+        .filter((item) => item.devise === "USD")
+        .reduce((acc, item) => acc + Number(item.amount || 0), 0);
       setTotalUSD(totalUSD);
     }
   }, [expenses]);
-useEffect(() => {
-  if (Array.isArray(expenses)) {
-    const totalCDF = expenses
-      .filter(item => item.devise === "CDF")
-      .reduce((acc, item) => acc + Number(item.amount || 0), 0);
+  useEffect(() => {
+    if (Array.isArray(expenses)) {
+      const totalCDF = expenses
+        .filter((item) => item.devise === "CDF")
+        .reduce((acc, item) => acc + Number(item.amount || 0), 0);
 
-    console.log("Total CDF :", totalCDF);
-    setTotalCDF(totalCDF);
-  }
-}, [expenses]);
+      console.log("Total CDF :", totalCDF);
+      setTotalCDF(totalCDF);
+    }
+  }, [expenses]);
 
   return (
     <>
@@ -349,80 +344,108 @@ useEffect(() => {
             </div>
           </div>
           {projects && (
-  <div className="w-[100%] flex flex-col justify-start items-start gap-3">
-    <h1 className="text-lg font-semibold">DOCUMENTS ET FICHIERS</h1>
+            <div className="w-full flex flex-col gap-4">
+              <h1 className="text-lg font-semibold">DOCUMENTS ET FICHIERS</h1>
+              <form
+                className="flex items-center gap-3"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (!projects?.id || !selectedFile) return;
 
-    {/* Upload form */}
-    <form
-      className="flex items-center gap-3"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        if (!projects?.id) return;
-        const formData = new FormData();
-        if (selectedFile) {
-          formData.append("file", selectedFile);
-          formData.append("projectId", projects.id);
+                  const formData = new FormData();
+                  formData.append("file", selectedFile);
 
-          try {
-            const res = await fetch("/api/upload", {
-              method: "POST",
-              body: formData,
-            });
+                  try {
+                    const res = await fetch(`/api/projects/${projects.id}/documents`, {
+                      method: "POST",
+                      body: formData,
+                    });
 
-            if (!res.ok) throw new Error("Erreur lors de l'upload");
+                    if (!res.ok) throw new Error("Erreur lors de l'upload");
 
-            const newDoc = await res.json();
+                    const newDoc = await res.json();
 
-            // Mettre à jour l’état local
-            setDocuments((prev) => [...prev, newDoc]);
-            setSelectedFile(null);
-          } catch (error) {
-            console.error("Upload échoué :", error);
-          }
-        }
-      }}
-    >
-      <Input
-        type="file"
-        onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-        className="w-[300px]"
-      />
-      <Button type="submit" className="bg-[#4895b7] text-white">
-        Upload
-      </Button>
-    </form>
-
-    {/* Zone d’affichage des documents */}
-    <div className="w-[100%] min-h-48 border-1 border-gray-400 border-dashed p-6 rounded-2xl">
-      {documents.length === 0 ? (
-        <div className="flex flex-col justify-center items-center text-[#1e1e2f] text-base">
-          <img
-            src="/undraw_no-data_ig65.svg"
-            className="w-32 h-32 mb-4"
-            alt="no-docs"
-          />
-          Aucun document pour ce projet
-        </div>
-      ) : (
-        <ul className="list-disc pl-6 space-y-2">
-          {documents.map((doc) => (
-            <li key={doc.id}>
-              <a
-                href={doc.fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#4895b7] underline"
+                    setDocuments((prev) => [...prev, newDoc]);
+                  } catch (error: unknown) {
+                    const message = error instanceof Error ? error.message : JSON.stringify(error);
+                    console.error("Upload échoué :", message);
+                  }
+                }}
               >
-                {doc.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  </div>
-)}
+                <Input
+                  type="file"
+                  name="file"
+                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                  className="w-[300px]"
+                />
+                <Button type="submit" className="bg-[#4895b7] text-white">
+                  Upload
+                </Button>
+              </form>
 
+              <div className="w-full min-h-48 border border-dashed border-gray-400 p-6 rounded-2xl">
+                {documents.length === 0 ? (
+                  <div className="flex flex-col justify-center items-center text-[#1e1e2f] text-base">
+                    <img src="/undraw_no-data_ig65.svg" className="w-32 h-32 mb-4" alt="no-docs" />
+                    Aucun document pour ce projet
+                  </div>
+                ) : (
+                  <div className="w-[100%] flex justify-between items-center gap-3">
+                    {documents.map((doc) => {
+                      const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(doc.fileUrl);
+                      const isPdf = /\.pdf$/i.test(doc.fileUrl);
+
+                      return (
+                        <div
+                          key={doc.id}
+                          className="w-[50%] flex flex-col items-center justify-center border border-dashed rounded-xl shadow-sm p-1 bg-white"
+                        >
+                          {isImage ? (
+                            <a
+                              href={doc.fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-[100%]"
+                            >
+                              <img
+                                src={doc.fileUrl}
+                                alt={doc.titre}
+                                className="w-[100%] h-36 object-cover rounded-lg hover:scale-105 transition-transform"
+                              />
+                            </a>
+                          ) : isPdf ? (
+                            <a
+                              href={doc.fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex flex-col items-center text-gray-400"
+                            >
+                              <FileText
+                                strokeWidth={1}
+                                className=" w-[100%] h-36 object-cover rounded-lg hover:scale-105 transition-transform"
+                              />
+                            </a>
+                          ) : (
+                            <a
+                              href={doc.fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex flex-col items-center text-gray-400 font-normal"
+                            >
+                              <BookAlert
+                                strokeWidth={1}
+                                className=" w-[100%] h-36 object-cover rounded-lg hover:scale-105 transition-transform"
+                              />
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="w-[100%] flex flex-col justify-start items-start gap-3">
             <h1>DEPENSES EFFECTUEZ SUR CE PROJET</h1>
@@ -446,10 +469,11 @@ useEffect(() => {
                 </TableHeader>
                 <TableBody className="border border-gray-200">
                   {currentCategories.map((expense) => (
-                    
                     <TableRow key={expense.id} className="border border-gray-200">
                       <TableCell className=" text-gray-700">{expense.date}</TableCell>
-                      <TableCell className="text-left text-gray-700">{expense.amount} {expense.devise}</TableCell>
+                      <TableCell className="text-left text-gray-700">
+                        {expense.amount} {expense.devise}
+                      </TableCell>
                       <TableCell className="text-left text-gray-700">{expense.libelle}</TableCell>
                       <TableCell className="text-left text-gray-700">
                         {expense.supplierName}

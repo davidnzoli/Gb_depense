@@ -4,7 +4,14 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+  // const { id } = params;
+  const { searchParams, pathname } = new URL(request.url);
+  const pathParts = pathname.split("/");
+  const id = pathParts[pathParts.indexOf("projects") + 1]; // récupère l'id entre 'projects' et 'documents'
+
+  if (!id) {
+    return NextResponse.json({ error: "Project ID missing" }, { status: 400 });
+  }
 
   const project = await prisma.project.findUnique({
     where: { id },

@@ -1,97 +1,83 @@
-// import { NextRequest, NextResponse } from "next/server";
-// import { prisma } from "@/lib/prisma";
-
-// export async function GET(
-//   request: NextRequest,
-//   { params }: { params: { id: string } }
-// ) {
-//   try {
-//     const { id } = params;
-
-//     const documents = await prisma.document.findMany({
-//       where: { projectId: id },
-//       select: {
-//         id: true,
-//         title: true,
-//         fileUrl: true,
-//         createdAt: true,
-//         updatedAt: true,
-//         project: { select: { name: true } },
-//       },
-//     });
-
-//     const formatted = documents.map((d) => ({
-//       ...d,
-//       projectName: d.project?.name || null,
-//       project: undefined,
-//       user: undefined,
-//     }));
-
-//     return NextResponse.json({
-//       success: true,
-//       message: "Liste des documents récupérée avec succès.",
-//       data: formatted,
-//     });
-//   } catch (error) {
-//     console.error("Erreur lors de la récupération des documents :", error);
-//     return NextResponse.json(
-//       { error: "Impossible de récupérer les documents" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import formidable, { Fields, Files } from "formidable";
 import path from "path";
 import { prisma } from "@/lib/prisma";
+import { Readable } from "stream";
+import fs from "fs";
+const { IncomingForm } = require("formidable-serverless");
 
-export const config = { api: { bodyParser: false } };
+export async function GET(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params;
 
-export async function POST(req: NextRequest) {
+  if (!id) {
+    return NextResponse.json({ error: "ID non fourni." }, { status: 400 });
+  }
+  const documents = await prisma.document.findMany({
+    where: { projectId: id },
+    select: { id: true, titre: true, fileUrl: true },
+  });
+
+  return NextResponse.json(documents);
+}
+
+// export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+//   try {
+//     const { id } = await context.params;
+//     const formData = await req.formData();
+
+//     const file = formData.get("file") as File | null;
+//     if (!file) {
+//       return NextResponse.json({ error: "Aucun fichier reçu" }, { status: 400 });
+//     }
+
+//     const sanitizedFileName = file.name.replace(/\s+/g, "_");
+
+//     const fileUrl = `/uploads/${sanitizedFileName}`;
+
+//     const document = await prisma.document.create({
+//       data: {
+//         titre: file.name,
+//         fileUrl,
+//         projectId: id,
+//       },
+//     });
+
+//     return NextResponse.json(document, { status: 201 });
+//   } catch (error) {
+//     console.error("Erreur Upload:", error);
+//     return NextResponse.json({ error: "Upload échoué" }, { status: 500 });
+//   }
+// }
+
+export const POST = async (req: NextRequest, context: { params: { id: string } }) => {
+  const { id: projectId } = context.params;
+
   try {
-    const form = formidable({
-      multiples: false,
-      uploadDir: "./public/uploads",
-      keepExtensions: true,
-    });
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
+    if (!file) return NextResponse.json({ error: "Aucun fichier reçu" }, { status: 400 });
 
-    const [fields, files]: [Fields, Files] = await new Promise(
-      (resolve, reject) => {
-        form.parse(req as any, (err, fields, files) => {
-          if (err) reject(err);
-          else resolve([fields, files]);
-        });
-      }
-    );
+    const fileName = (file.name || "unknown").replace(/ /g, "_");
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    const file = Array.isArray(files.file) ? files.file[0] : files.file;
-    const rawProjectId = Array.isArray(fields.projectId) ? fields.projectId[0] : fields.projectId;
-    const projectId = typeof rawProjectId === "string" ? rawProjectId : null;
+    const fs = require("fs");
+    const path = require("path");
+    const filePath = path.join(process.cwd(), "public/uploads", fileName);
 
-    if (!file || !projectId) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
-        { status: 400 }
-      );
-    }
-
-    // Chemin relatif pour la BDD
-    const fileUrl = `/uploads/${path.basename(file.filepath)}`;
+    fs.writeFileSync(filePath, buffer);
 
     const document = await prisma.document.create({
       data: {
-        title: file.originalFilename ?? fileUrl,
-        fileUrl,
+        titre: fileName,
+        fileUrl: `/uploads/${fileName}`,
         projectId,
       },
     });
 
-    return new Response(JSON.stringify(document), { status: 201 });
-  } catch (error: any) {
-    return new Response(
-      JSON.stringify({ error: error.message ?? "Server error" }),
-      { status: 500 }
-    );
+    return NextResponse.json(document, { status: 201 });
+  } catch (error) {
+    console.error("Erreur Upload:", error);
+    return NextResponse.json({ error: "Upload échoué" }, { status: 500 });
   }
-}
+};

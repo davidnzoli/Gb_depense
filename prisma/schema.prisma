@@ -101,9 +101,8 @@ model Milestone {
 
 model Document {
   id        String   @id @default(cuid())
-  title     String?
+  titre String
   fileUrl   String  // Lien vers le fichier stocké
-  type      String?  // Type de document (plan, photo, contrat)
   createdAt   DateTime @default(now())            // Date de création
   updatedAt   DateTime @updatedAt   
   projectId String

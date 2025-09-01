@@ -10,7 +10,6 @@
 
 //   const { id} = await context.params;
 
-
 //   if (!id) {
 //     return NextResponse.json({ error: "ID non fourni." }, { status: 400 });
 //   }
@@ -28,18 +27,15 @@
 //     return NextResponse.json({ error: "Dépense introuvable." }, { status: 404 });
 //   }
 
-
 //   // const projectExpenses = await prisma.expense.findMany({
 //   //   where: { projectId },
 //   //   include: { project: true },
 //   // });
 
-
 //   // const formattedProjectExpenses = projectExpenses.map((e) => ({
 //   //   ...e,
 //   //   projectName: e.project?.name ?? null,
 //   // }));
-
 
 //   return NextResponse.json({
 //     expense: {
@@ -153,15 +149,11 @@
 //   }
 // }
 
-
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 // ─── GET ONE EXPENSE WITH NAMES ─────────────────────────────
-export async function GET(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function GET(request: Request, context: { params: { id: string } }) {
   const { id } = context.params;
 
   if (!id) {
@@ -221,10 +213,7 @@ async function getProjectIdByName(name: string) {
 }
 
 // ─── PUT : UPDATE EXPENSE BY NAME ─────────────────────────────
-export async function PUT(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
   try {
     const { id } = context.params;
     const body = await request.json();
@@ -260,18 +249,12 @@ export async function PUT(
     return NextResponse.json(updatedExpense, { status: 200 });
   } catch (error) {
     console.error("❌ Erreur lors de l'update :", error);
-    return NextResponse.json(
-      { error: "Erreur lors de la mise à jour." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erreur lors de la mise à jour." }, { status: 500 });
   }
 }
 
 // ─── DELETE ─────────────────────────────
-export async function DELETE(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function DELETE(request: Request, context: { params: { id: string } }) {
   const { id } = context.params;
 
   try {
@@ -289,9 +272,6 @@ export async function DELETE(
     return NextResponse.json({ message: "Dépense supprimée avec succès" });
   } catch (error) {
     console.error("Erreur de suppression:", error);
-    return NextResponse.json(
-      { error: "Erreur lors de la suppression" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
   }
 }

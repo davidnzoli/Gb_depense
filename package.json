@@ -28,6 +28,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "formidable": "^3.5.4",
+    "formidable-serverless": "^1.1.1",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.534.0",
     "next": "15.4.5",

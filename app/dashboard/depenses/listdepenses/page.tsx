@@ -31,7 +31,7 @@ interface ItemsDepense {
   libelle: string;
   rubriqueName: string;
   beneficiaire: string;
-  devise:string;
+  devise: string;
   amount: string;
   supplierName: string;
 }
@@ -158,7 +158,9 @@ export default function listeDepenses() {
                   <TableRow key={depense.id} className="border border-gray-200">
                     <TableCell>{depense.date}</TableCell>
                     <TableCell className="text-left">{depense.rubriqueName}</TableCell>
-                    <TableCell className="text-left">{depense.amount} {depense.devise}</TableCell>
+                    <TableCell className="text-left">
+                      {depense.amount} {depense.devise}
+                    </TableCell>
                     <TableCell className="text-left">{depense.libelle}</TableCell>
                     {/* <TableCell className="text-left">{depense.beneficiaire}</TableCell> */}
                     <TableCell className="text-left">{depense.supplierName}</TableCell>

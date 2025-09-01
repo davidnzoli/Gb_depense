@@ -1,4 +1,4 @@
-DATABASE_URL='postgresql://neondb_owner:npg_dpOyS6fPT9Yn@ep-square-band-ad7xs6hl-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+DATABASE_URL="postgresql://neondb_owner:npg_dpOyS6fPT9Yn@ep-square-band-ad7xs6hl-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&pgbouncer=false"
 
 ## Getting Started
 
