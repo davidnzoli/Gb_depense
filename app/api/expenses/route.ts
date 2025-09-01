@@ -1,32 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-// export async function GET() {
-//   try {
-//     const categorie = await prisma.expense.findMany();
-
-//     return NextResponse.json(
-//       {
-//         success: true,
-//         message: "Liste des depenses récupérée avec succès.",
-//         data: categorie,
-//       },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Erreur lors de la récupération des depenses :", error);
-
-//     return NextResponse.json(
-//       {
-//         success: false,
-//         message: "Erreur serveur. Impossible de récupérer les depenses.",
-//         error: error instanceof Error ? error.message : "Erreur inconnue",
-//       },
-//       { status: 500 }
-//     );
-//   }
-// }
-
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
     const expenses = await prisma.expense.findMany({

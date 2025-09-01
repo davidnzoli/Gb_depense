@@ -48,6 +48,7 @@ export default function listeProject() {
   const [categoriesPerPage] = useState(7);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
+  
   async function fetchProjects() {
     setLoading(true);
     const res = await fetch("/api/projects");

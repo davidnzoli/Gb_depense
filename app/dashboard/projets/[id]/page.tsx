@@ -21,7 +21,9 @@ import {
   BadgeDollarSign,
   BanknoteArrowDown,
   BookAlert,
+  FileChartColumnIncreasing,
   FileText,
+  Printer,
 } from "lucide-react";
 import Pagination from "@/components/pagination";
 import { Trash, Edit, Loader2, Pencil, Eye } from "lucide-react";
@@ -32,7 +34,7 @@ import AddProject from "@/components/popups/addNews/addProject";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import ConfigProject from "@/components/popups/updateContent/configProject";
-import { Item } from "@radix-ui/react-select";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
 interface ItemsProjects {
   id: string;
@@ -67,8 +69,11 @@ interface Document {
   type?: string;
   projectId: string;
 }
-
-export default function projectSetting() {
+type Props = {
+  projectName: string;
+  expense: ItemsDepense[];
+};
+export default function projectSetting({ projectName, expense }: Props){
   const [loading, setLoading] = useState(true);
   const [opens, setOpens] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -83,9 +88,62 @@ export default function projectSetting() {
   const [showUpload, setShowUpload] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+
+    const generatePdf = async () => {
+
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([600, 800]);
+
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    let y = 750;
+
+    page.drawText(`Rapport des Dépenses - ${projectName}`, {
+      x: 50,
+      y,
+      size: 18,
+      font,
+      color: rgb(0, 0, 0.8),
+    });
+
+    y -= 40;
+
+    page.drawText("Date", { x: 30, y, size: 12, font, color: rgb(0, 0, 0) });
+    page.drawText("libelle", { x: 250, y, size: 12, font });
+    page.drawText("Montant ($)", { x: 450, y, size: 12, font });
+    y -= 20;
+
+    expenses.forEach((exp) => {
+      page.drawText(exp.date, { x: 30, y, size: 10, font });
+      page.drawText(exp.libelle, { x: 250, y, size: 10, font });
+      page.drawText(Number(exp.amount).toFixed(2), { x: 450, y, size: 10, font });
+      y -= 20;
+    });
+
+    const total = expenses.reduce((acc, e) => acc + Number(e.amount), 0);
+    y -= 30;
+    page.drawText(`Total: $${total.toFixed(2)}`, {
+      x: 400,
+      y,
+      size: 14,
+      font,
+      color: rgb(0.2, 0.5, 0.2),
+    });
+
+    const pdfBytes = await pdfDoc.save();
+
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `rapport_depenses_${projectName}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const { id } = useParams<{ id: string }>();
 
-  //  if (!documents || documents.length === 0) return <div>Aucun document</div>;
   async function fetchProjectId(id: string) {
     setLoading(true);
     try {
@@ -277,11 +335,11 @@ export default function projectSetting() {
               <h1 className=" bg-[#f2f2f5] p-4 rounded-[50%] text-red-500">
                 <BadgeDollarSign className="w-10 h-10" />
               </h1>
-              {projects && (
+              {projects?.budget != null? (
                 <h1 className="font-bold text-2xl text-[#393944]">
                   {projects.budget} {projects.devisNumber}
                 </h1>
-              )}
+              ):<h1 className="font-bold text-2xl text-[#393944]">$ 0.00</h1>}
 
               <div className=" w-[100%] gap-1 flex justify-between items-center text-center">
                 <h1 className="font-bold text-sm text-[#1e1e2f]">Budget</h1>
@@ -392,8 +450,8 @@ export default function projectSetting() {
                 ) : (
                   <div className="w-[100%] flex justify-between items-center gap-3">
                     {documents.map((doc) => {
-                      const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(doc.fileUrl);
-                      const isPdf = /\.pdf$/i.test(doc.fileUrl);
+                      const isImage = /\.(jpg|jpeg|png|gif|svg|heic|webp)$/i.test(doc.fileUrl);
+                      const isPdf = /\.pdf$/i.test(doc.fileUrl) || /\.txt$/i.test(doc.fileUrl) || /\.docx$/i.test(doc.fileUrl);
 
                       return (
                         <div
@@ -448,7 +506,22 @@ export default function projectSetting() {
           )}
 
           <div className="w-[100%] flex flex-col justify-start items-start gap-3">
-            <h1>DEPENSES EFFECTUEZ SUR CE PROJET</h1>
+            <div className="flex w-[100%] justify-between items-start gap-3">
+
+              <h1>DEPENSES EFFECTUEZ SUR CE PROJET</h1>
+              {currentCategories && currentCategories.length > 0 ? 
+               <Button
+                            variant="outline"
+                            
+                            onClick={generatePdf}
+                            className="flex items-center border-1 p-3 border-gray-100 text-white font-bold bg-[#1e1e2f] hover:text-[#1e1e2f] cursor-pointer"
+                          >
+                            PDF
+                            <FileChartColumnIncreasing className="h-6 w-6  hover:text-[#1e1e2f] hover:border-[#1e1e2f] " />
+                          </Button>:""}
+              
+            </div>
+            
             {currentCategories && currentCategories.length > 0 ? (
               <Table className="border border-gray-200">
                 <TableHeader className="border border-gray-200">
@@ -483,20 +556,18 @@ export default function projectSetting() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="text-center flex items-center justify-center space-x-2">
-                          {/* <DeleteExpense id={projet.id} onDeletes={handleDelete} /> */}
-
                           <Button
                             variant="outline"
                             className="flex items-center border-1 border-gray-100 cursor-pointer"
                           >
-                            <Eye className="h-5 w-5 text-[#4895b7]" />
+                            <Printer  className="h-5 w-5 text-[#4895b7]" />
                           </Button>
-
+                          
                           <Button
                             variant="outline"
                             className="flex items-center cursor-pointer border-1 border-gray-100"
                           >
-                            <Pencil className="h-5 w-5 text-[#1e1e2f]" />
+                            <Trash  className="h-5 w-5 text-red-500" />
                           </Button>
                         </div>
                       </TableCell>
