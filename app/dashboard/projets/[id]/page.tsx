@@ -328,8 +328,8 @@ export default function projectSetting({ projectName, expense }: Props) {
             </>
           )}
 
-          <div className=" flex flex-row w-[100%] justify-between items-center bg-white gap-3">
-            <div className="w-[50%] h-48 border-1 p-4 rounded-2xl shadow-md flex flex-col justify-end items-start gap-5 border-gray-300">
+          <div className=" flex lg:flex-row flex-col lg:items-center items-start w-[100%] justify-between bg-white gap-3">
+            <div className="w-[100%] lg:w-[50%] h-48 border-1 p-4 rounded-2xl shadow-md flex flex-col justify-end items-start gap-5 border-gray-300">
               <h1 className=" bg-[#f2f2f5] p-4 rounded-[50%] text-red-500">
                 <BadgeDollarSign className="w-10 h-10" />
               </h1>
@@ -351,7 +351,7 @@ export default function projectSetting({ projectName, expense }: Props) {
                 </h1>
               </div>
             </div>
-            <div className="w-[50%] h-48 border-1 p-4 rounded-2xl shadow-md flex flex-col justify-end items-start gap-3 border-gray-300">
+            <div className="w-[100%] lg:w-[50%] h-48 border-1 p-4 rounded-2xl shadow-md flex flex-col justify-end items-start gap-3 border-gray-300">
               <h1 className=" bg-[#f2f2f5] p-4 rounded-[50%] text-red-500">
                 <BadgeDollarSign className="w-10 h-10" />
               </h1>
@@ -367,7 +367,7 @@ export default function projectSetting({ projectName, expense }: Props) {
                 </h1>
               </div>
             </div>
-            <div className="w-[50%] h-48 border-1 p-4 rounded-2xl shadow-md flex flex-col justify-end items-start gap-4 border-gray-300">
+            <div className="w-[100%] lg:w-[50%] h-48 border-1 p-4 rounded-2xl shadow-md flex flex-col justify-end items-start gap-4 border-gray-300">
               <h1 className=" bg-[#f2f2f5] p-4 rounded-[50%] text-red-500">
                 <BadgeDollarSign className="w-10 h-10" />
               </h1>
@@ -383,7 +383,7 @@ export default function projectSetting({ projectName, expense }: Props) {
                 </h1>
               </div>
             </div>
-            <div className="w-[50%] h-48 border-1 p-4 rounded-2xl shadow-md flex flex-col justify-end items-start gap-4 border-gray-300">
+            <div className="w-[100%] lg:w-[50%] h-48 border-1 p-4 rounded-2xl shadow-md flex flex-col justify-end items-start gap-4 border-gray-300">
               <h1 className=" bg-[#f2f2f5] rounded-[50%] p-4 text-red-500">
                 <BanknoteArrowDown className="w-10 h-10" />
               </h1>
