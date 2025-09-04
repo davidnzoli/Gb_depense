@@ -117,12 +117,12 @@ export default function ListeProject() {
       ) : (
         <>
           {/* Filtres */}
-          <div className="flex h-16 bg-white lg:p-9 p-2 mb-1 justify-between items-center gap-2 lg:gap-3.5">
-            <div className="flex justify-center items-center gap-2">
+          <div className="w-[100%] flex lg:h-16 h-32 bg-white lg:p-9 p-2 mb-1 justify-between items-center gap-2 lg:gap-3.5">
+            <div className="flex lg:flex-row flex-col justify-center items-center gap-2">
               <Input
                 type="text"
                 placeholder="Filtrer par nom de projet"
-                className="w-70"
+                className="lg:w-70 w-60"
                 value={filterProjectName}
                 onChange={(e) => setFilterProjectName(e.target.value)}
                 onKeyDown={(e) => {
@@ -132,7 +132,7 @@ export default function ListeProject() {
               <Input
                 type="text"
                 placeholder="Filtrer par nom du client"
-                className="w-70"
+                className="lg:w-70 w-60"
                 value={filterClientName}
                 onChange={(e) => setFilterClientName(e.target.value)}
                 onKeyDown={(e) => {
@@ -142,7 +142,7 @@ export default function ListeProject() {
               
             </div>
 
-            <div className="flex justify-center items-center gap-2">
+            <div className="flex lg:flex-row flex-col justify-center items-center gap-2">
               <Button
                 className="bg-[#1e1e2f] cursor-pointer flex items-center"
                 onClick={applyFilter}
@@ -153,7 +153,7 @@ export default function ListeProject() {
                 <DialogTrigger asChild>
                   <Button className="bg-[#4895b7] cursor-pointer flex items-center">
                     Ajouter
-                    <ArrowRight className=" hidden lg:block ml-2 h-4 w-4" />
+                    <ArrowRight className="  lg:ml-2 h-4 lg:w-4 w-3" />
                   </Button>
                 </DialogTrigger>
                 <AddProject onClosed={() => setOpens(false)} />

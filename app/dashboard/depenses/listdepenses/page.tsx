@@ -99,18 +99,19 @@ export default function ListeDepenses() {
         </div>
       ) : (
         <>
-          <div className="flex h-16 bg-white p-9 mb-1 justify-between items-center gap-3.5">
+          <div className="flex lg:flex-row flex-col lg:h-16 h-24 bg-white lg:p-9 p-1 lg:mb-1 mb-2 lg:justify-between lg:items-center items-start gap-2 lg:gap-3.5">
             <div className="flex items-center gap-2">
               <Input
                 type="date"
                 placeholder="Filtrer par date"
-                className="w-48"
+                className="lg:w-48 w-80"
                 value={filterDate}
                 onChange={(e) => setFilterDate(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && applyFilter()}
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex lg:items-center items-start gap-2 justify-start
+            ">
               <Button
                 className="bg-green-950 cursor-pointer flex items-center"
                 onClick={applyFilter}

@@ -48,7 +48,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={poppins.variable}>
         <div className="flex w-[100%] ">
-          <main className="flex-grow w-[100%]  items-center justify-center p-6 mt-20 overflow-auto">
+          <main className="flex-grow w-[100%] items-center justify-center lg:p-6 p-0 mt-20 overflow-auto">
             {children}
           </main>
           <Toaster />

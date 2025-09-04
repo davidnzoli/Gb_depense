@@ -133,7 +133,7 @@ export default function AddSupplier({ onClosed }: AddDataDialogContent) {
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Ajouter un service</DialogTitle>
+        <DialogTitle>Ajouter un Fournisseur</DialogTitle>
         <DialogDescription>
           Remplissez le formulaire ci-dessous pour ajouter un fournisseur.
         </DialogDescription>

@@ -489,10 +489,7 @@ const menuItems = [
   {
     text: "RAPPORTS",
     icon: <FileText className="h-5 w-5" />,
-    subItems: [
-      { text: "RAPPORTS DES DEPENSES", href: "/dashboard/rapports/depenses" },
-      { text: "RAPPORTS DES PROJETS", href: "/dashboard/rapports/projets" },
-    ],
+    href:"dashboard/rapport"
   },
   {
     text: "COMPTABILITE",
@@ -513,7 +510,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between pr-15 pl-5 shadow-md z-50 ">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between lg:pr-15 pr-12 lg:pl-5 pl-2 shadow-md z-50 ">
         <Button
           variant="ghost"
           className="p-2 w-16 cursor-pointer"
@@ -531,7 +528,7 @@ export default function Sidebar() {
              <div className="w-[100%] flex items-center justify-end gap-2 cursor-pointer">
                <Image src="/user-round.svg" alt="Mon profil" width={40} height={40} />
 
-              <span className="text-sm font-medium text-gray-900">Mon Profil</span>
+              <span className="lg:text-sm text-[12px] font-medium text-gray-900">Mon Profil</span>
              </div>
              
             </div>

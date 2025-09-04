@@ -119,9 +119,9 @@ export default function AddRubrique({ onClosed }: AddDataDialogContent) {
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Ajouter un service</DialogTitle>
+        <DialogTitle>Ajouter une Rubrique</DialogTitle>
         <DialogDescription>
-          Remplissez le formulaire ci-dessous pour ajouter un service.
+          Remplissez le formulaire ci-dessous pour ajouter une rubrique.
         </DialogDescription>
       </DialogHeader>
 

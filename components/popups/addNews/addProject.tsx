@@ -151,7 +151,7 @@ export default function AddProject({ onClosed }: AddDataDialogContent) {
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Ajouter un service</DialogTitle>
+        <DialogTitle>Ajouter un projet</DialogTitle>
         <DialogDescription>
           Remplissez le formulaire ci-dessous pour ajouter un projet.
         </DialogDescription>
