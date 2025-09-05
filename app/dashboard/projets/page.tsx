@@ -44,10 +44,8 @@ export default function ListeProject() {
   const [categoriesPerPage] = useState(7);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
-
   const [filterProjectName, setFilterProjectName] = useState<string>("");
   const [filterClientName, setFilterClientName] = useState<string>("");
-
 
   async function fetchProjects() {
     setLoading(true);
@@ -76,7 +74,6 @@ export default function ListeProject() {
     };
   }, []);
 
-
   const applyFilter = () => {
     let result = Projects;
 
@@ -91,9 +88,8 @@ export default function ListeProject() {
     }
 
     setFiltered(result);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
-
 
   const totalCategories = filtered.length;
   const totalPages = Math.ceil(totalCategories / categoriesPerPage);
@@ -139,7 +135,6 @@ export default function ListeProject() {
                   if (e.key === "Enter") applyFilter();
                 }}
               />
-              
             </div>
 
             <div className="flex lg:flex-row flex-col justify-center items-center gap-2">

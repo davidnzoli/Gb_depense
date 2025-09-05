@@ -276,8 +276,8 @@ export default function AddExpense({ onClosed }: AddDataDialogContent) {
             value={formData.devise}
             onValueChange={(val) => setFormData((prev) => ({ ...prev, devise: val }))}
           >
-            <SelectTrigger id="service" className="w-full">
-              <SelectValue placeholder="Sélectionnez une service" />
+            <SelectTrigger id="devise" className="w-full">
+              <SelectValue placeholder="Sélectionnez la devise" />
             </SelectTrigger>
             <SelectContent className="w-full">
               <SelectViewport className="max-h-60 overflow-y-auto">

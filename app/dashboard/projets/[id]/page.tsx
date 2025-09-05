@@ -89,130 +89,130 @@ export default function projectSetting({ projectName, expense }: Props) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const generatePdf = async () => {
-  const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([600, 800]);
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([600, 800]);
 
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-  function hexToRgb(hex: string) {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
-  return rgb(r, g, b);
-}
+    function hexToRgb(hex: string) {
+      const r = parseInt(hex.slice(1, 3), 16) / 255;
+      const g = parseInt(hex.slice(3, 5), 16) / 255;
+      const b = parseInt(hex.slice(5, 7), 16) / 255;
+      return rgb(r, g, b);
+    }
 
+    const logoUrl = "/Design sans titre.png";
+    const logoBytes = await fetch(logoUrl).then((res) => res.arrayBuffer());
+    const logoImage = await pdfDoc.embedPng(logoBytes);
 
-  const logoUrl = "/Design sans titre.png"; 
-  const logoBytes = await fetch(logoUrl).then((res) => res.arrayBuffer());
-  const logoImage = await pdfDoc.embedPng(logoBytes); 
+    const { width: logoWidth, height: logoHeight } = logoImage.scale(0.2);
 
-  const { width: logoWidth, height: logoHeight } = logoImage.scale(0.2); 
+    let y = 760;
 
-  let y = 760;
-
-
-  page.drawImage(logoImage, {
-    x: 210,
-    y: y-70,
-    width: 160,
-    height: 100,
-  });
-
-y -= 30;
-  // ✅ Titre au centre
-  page.drawText("RAPPORT DE TOUTES LES DEPENSES", {
-    x: 30,
-    y: y-80,
-    size: 18,
-    font,
-    color: hexToRgb("#4895b7"),
-  });
-  y -= 30; // espace après l'en-tête
-  page.drawText(`${projects?.name}`, {
-    x: 30,
-    y: y-75,
-    size: 13,
-    font,
-    color: hexToRgb("#1e1e2f"),
-  });
-  y -= 20; 
-  page.drawText(`${projects?.serviceName}`, {
-    x: 30,
-    y: y-75,
-    size: 12,
-    font,
-    color: hexToRgb("#4895b7"),
-  });
-  y -= 20; 
-  const today = new Date().toLocaleDateString("fr-FR");
-  page.drawText(`Dates : ${today}`, {
-    x: 30,
-    y: y-74,
-    size: 13,
-    font,
-    color: hexToRgb("#1e1e2f"),
-  });
-  y -= 150; 
-
-  page.drawText("Date", { x: 30, y, size: 15, font });
-  page.drawText("Rubrique", { x: 250, y, size: 15, font });
-  page.drawText("Montant ($)", { x: 450, y, size: 15, font });
-  y -= 20;
-
-  expenses.forEach((exp) => {
-    page.drawText(new Date(exp.date).toLocaleDateString("fr-FR"), {
-      x: 30,
-      y,
-      size: 14,
-      font,
+    page.drawImage(logoImage, {
+      x: 210,
+      y: y - 70,
+      width: 160,
+      height: 100,
     });
-    page.drawText(exp.rubriqueName, { x: 250, y, size: 14, font });
-    page.drawText(`${Number(exp.amount).toFixed(2)} ${exp.devise}`, {
-      x: 450,
-      y,
-      size: 14,
+
+    y -= 30;
+    // ✅ Titre au centre
+    page.drawText("RAPPORT DE TOUTES LES DEPENSES", {
+      x: 30,
+      y: y - 80,
+      size: 18,
       font,
+      color: hexToRgb("#4895b7"),
+    });
+    y -= 30; // espace après l'en-tête
+    page.drawText(`${projects?.name}`, {
+      x: 30,
+      y: y - 75,
+      size: 13,
+      font,
+      color: hexToRgb("#1e1e2f"),
     });
     y -= 20;
-  });
+    page.drawText(`${projects?.serviceName}`, {
+      x: 30,
+      y: y - 75,
+      size: 12,
+      font,
+      color: hexToRgb("#4895b7"),
+    });
+    y -= 20;
+    const today = new Date().toLocaleDateString("fr-FR");
+    page.drawText(`Dates : ${today}`, {
+      x: 30,
+      y: y - 74,
+      size: 13,
+      font,
+      color: hexToRgb("#1e1e2f"),
+    });
+    y -= 150;
 
-const totalsByDevise = expenses.reduce((acc, e) => {
-  const devise = e.devise || "N/A"; 
-  const amount = Number(e.amount);
+    page.drawText("Date", { x: 30, y, size: 15, font });
+    page.drawText("Rubrique", { x: 250, y, size: 15, font });
+    page.drawText("Montant ($)", { x: 450, y, size: 15, font });
+    y -= 20;
 
-  if (!acc[devise]) {
-    acc[devise] = 0;
-  }
+    expenses.forEach((exp) => {
+      page.drawText(new Date(exp.date).toLocaleDateString("fr-FR"), {
+        x: 30,
+        y,
+        size: 14,
+        font,
+      });
+      page.drawText(exp.rubriqueName, { x: 250, y, size: 14, font });
+      page.drawText(`${Number(exp.amount).toFixed(2)} ${exp.devise}`, {
+        x: 450,
+        y,
+        size: 14,
+        font,
+      });
+      y -= 20;
+    });
 
-  acc[devise] += amount;
-  return acc;
-}, {} as Record<string, number>);
+    const totalsByDevise = expenses.reduce(
+      (acc, e) => {
+        const devise = e.devise || "N/A";
+        const amount = Number(e.amount);
 
+        if (!acc[devise]) {
+          acc[devise] = 0;
+        }
 
-y -= 30;
-page.drawText("Totaux par devise :", { x: 30, y, size: 14, font });
+        acc[devise] += amount;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-Object.entries(totalsByDevise).forEach(([devise, total]) => {
-  y -= 20;
-  page.drawText(`${devise}: ${total.toFixed(2)}`, {
-    x: 30,
-    y,
-    size: 12,
-    font,
-    color: rgb(0.2, 0.5, 0.2),
-  });
-});
+    y -= 30;
+    page.drawText("Totaux par devise :", { x: 30, y, size: 14, font });
 
-  const pdfBytes = await pdfDoc.save();
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
-  const url = URL.createObjectURL(blob);
+    Object.entries(totalsByDevise).forEach(([devise, total]) => {
+      y -= 20;
+      page.drawText(`${devise}: ${total.toFixed(2)}`, {
+        x: 30,
+        y,
+        size: 12,
+        font,
+        color: rgb(0.2, 0.5, 0.2),
+      });
+    });
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `rapport_depenses_${projectName}.pdf`;
-  a.click();
-  URL.revokeObjectURL(url);
-};
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `rapport_depenses_${projectName}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const { id } = useParams<{ id: string }>();
 
@@ -360,34 +360,33 @@ Object.entries(totalsByDevise).forEach(([devise, total]) => {
                 <div className="border-b-1 border-gray-100 border-b-gray flex flex-row lg:p-5 p-2 justify-start items-center bg-[#fbfbfb] rounded-b-2xl  ">
                   <h1 className="w-md">Action rapides</h1>
                   <div className="flex flex-col lg:flex-row justify-end items-center gap-1">
-                             <Button
-                    variant="outline"
-                    onClick={() => {
-                      setSelectedProjectId(projects.id);
-                      setOpens(true);
-                    }}
-                    className="flex items-center w-[220px] text-white  cursor-pointer lg:mr-3 lg:p-5 p-1 bg-[#1e1e2f] border-1 border-gray-100 hover:bg-white hover:text-[#4895b7] hover:border-[#4895b7]"
-                  >
-                    Configuration du projet
-                    <Edit className="h-5 w-5 text-text-[#1e1e2f]" />
-                  </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedProjectId(projects.id);
+                        setOpens(true);
+                      }}
+                      className="flex items-center w-[220px] text-white  cursor-pointer lg:mr-3 lg:p-5 p-1 bg-[#1e1e2f] border-1 border-gray-100 hover:bg-white hover:text-[#4895b7] hover:border-[#4895b7]"
+                    >
+                      Configuration du projet
+                      <Edit className="h-5 w-5 text-text-[#1e1e2f]" />
+                    </Button>
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="text-white  w-[220px]  cursor-pointer lg:mr-3 lg:p-5 p-1 bg-[#4895b7] border-1 border-gray-100 hover:bg-white hover:text-[#4895b7] hover:border-[#4895b7]"
-                  >
-                    Jalon
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="text-white  w-[220px] cursor-pointer lg:p-5 p-1 bg-[#2b5a6c] border-1 border-gray-100  hover:bg-white hover:text-[#4895b7] hover:border-[#4895b7]"
-                  >
-                    paramettre
-                  </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="text-white  w-[220px]  cursor-pointer lg:mr-3 lg:p-5 p-1 bg-[#4895b7] border-1 border-gray-100 hover:bg-white hover:text-[#4895b7] hover:border-[#4895b7]"
+                    >
+                      Jalon
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="text-white  w-[220px] cursor-pointer lg:p-5 p-1 bg-[#2b5a6c] border-1 border-gray-100  hover:bg-white hover:text-[#4895b7] hover:border-[#4895b7]"
+                    >
+                      paramettre
+                    </Button>
                   </div>
-           
                 </div>
               </div>
               <Dialog open={opens} onOpenChange={setOpens}>

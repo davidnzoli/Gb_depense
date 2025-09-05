@@ -129,16 +129,16 @@
 //           <Image src="/LOGO_KIND_.svg" alt="logo" width={70} height={20} />
 //               </div>
 //         <DropdownMenu >
-          
+
 //           <DropdownMenuTrigger asChild>
 //             <div className="flex items-center justify-end gap-2">
-              
+
 //              <div className="w-[100%] flex items-center justify-end gap-2 cursor-pointer">
 //                <Image src="/user-round.svg" alt="Mon profil" width={40} height={40} />
 
 //               <span className="text-sm font-medium text-gray-900">Mon Profil</span>
 //              </div>
-             
+
 //             </div>
 //           </DropdownMenuTrigger>
 //           <DropdownMenuContent className="w-40" align="start">
@@ -229,9 +229,9 @@
 //       </ScrollArea>
 //     </aside>
 //       )}
-    
+
 //     </>
-    
+
 //   );
 // }
 
@@ -318,11 +318,11 @@
 
 //       <aside
 //         className={`fixed top-0 left-0 h-screen w-72 bg-[#1e1e2f] text-white font-poppins font-bold flex flex-col justify-between z-40 transform transition-transform duration-300
-//         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
+//         ${isOpen ? "translate-x-0" : "-translate-x-full"}
 //         lg:translate-none lg:translate-x-none lg:flex-row lg:block lg:translate-0 lg:static`}
-        
+
 //       >
-        
+
 //               <div className={`${isOpen ? "hidden" : "hidden"} flex items-center justify-center gap-2 cursor-pointer` }>
 //         <Image
 //           src="/LOGO_KIND_.svg"
@@ -393,41 +393,40 @@
 //   );
 // }
 
+//         </div>
+//   <DropdownMenu >
 
-      //         </div>
-      //   <DropdownMenu >
-          
-      //     <DropdownMenuTrigger asChild>
-      //       <div className="flex items-center justify-end gap-2">
-              
-      //        <div className="w-[100%] flex items-center justify-end gap-2 cursor-pointer">
-      //          <Image src="/user-round.svg" alt="Mon profil" width={40} height={40} />
+//     <DropdownMenuTrigger asChild>
+//       <div className="flex items-center justify-end gap-2">
 
-      //         <span className="text-sm font-medium text-gray-900">Mon Profil</span>
-      //        </div>
-             
-      //       </div>
-      //     </DropdownMenuTrigger>
-      //     <DropdownMenuContent className="w-40" align="start">
-      //       <DropdownMenuLabel className="text-gray-500">My Account</DropdownMenuLabel>
-      //       <DropdownMenuGroup>
-      //         <DropdownMenuItem className="cursor-pointer font-base text-md">
-      //           Profile
-      //           <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-      //         </DropdownMenuItem>
-      //         <DropdownMenuItem className="cursor-pointer font-base text-md">
-      //           Settings
-      //           <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-      //         </DropdownMenuItem>
-      //       </DropdownMenuGroup>
-      //       <DropdownMenuSeparator />
-      //       <DropdownMenuItem className="cursor-pointer font-base text-md">
-      //         Log out
-      //         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-      //       </DropdownMenuItem>
-      //     </DropdownMenuContent>
-      //   </DropdownMenu>
-      // </div>
+//        <div className="w-[100%] flex items-center justify-end gap-2 cursor-pointer">
+//          <Image src="/user-round.svg" alt="Mon profil" width={40} height={40} />
+
+//         <span className="text-sm font-medium text-gray-900">Mon Profil</span>
+//        </div>
+
+//       </div>
+//     </DropdownMenuTrigger>
+//     <DropdownMenuContent className="w-40" align="start">
+//       <DropdownMenuLabel className="text-gray-500">My Account</DropdownMenuLabel>
+//       <DropdownMenuGroup>
+//         <DropdownMenuItem className="cursor-pointer font-base text-md">
+//           Profile
+//           <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+//         </DropdownMenuItem>
+//         <DropdownMenuItem className="cursor-pointer font-base text-md">
+//           Settings
+//           <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+//         </DropdownMenuItem>
+//       </DropdownMenuGroup>
+//       <DropdownMenuSeparator />
+//       <DropdownMenuItem className="cursor-pointer font-base text-md">
+//         Log out
+//         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+//       </DropdownMenuItem>
+//     </DropdownMenuContent>
+//   </DropdownMenu>
+// </div>
 
 "use client";
 
@@ -466,11 +465,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import Image from "next/image";
 
 const menuItems = [
@@ -489,7 +484,7 @@ const menuItems = [
   {
     text: "RAPPORTS",
     icon: <FileText className="h-5 w-5" />,
-    href:"dashboard/rapport"
+    href: "/dashboard/rapport",
   },
   {
     text: "COMPTABILITE",
@@ -516,21 +511,21 @@ export default function Sidebar() {
           className="p-2 w-16 cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <X className="h-24 w-24 cursor-pointer" /> : <Menu className="h-24 w-24 cursor-pointer" />}
+          {isOpen ? (
+            <X className="h-24 w-24 cursor-pointer" />
+          ) : (
+            <Menu className="h-24 w-24 cursor-pointer" />
+          )}
         </Button>
-    
-                    
-        <DropdownMenu >
-          
+
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="flex items-center justify-end gap-2">
-              
-             <div className="w-[100%] flex items-center justify-end gap-2 cursor-pointer">
-               <Image src="/user-round.svg" alt="Mon profil" width={40} height={40} />
+              <div className="w-[100%] flex items-center justify-end gap-2 cursor-pointer">
+                <Image src="/user-round.svg" alt="Mon profil" width={40} height={40} />
 
-              <span className="lg:text-sm text-[12px] font-medium text-gray-900">Mon Profil</span>
-             </div>
-             
+                <span className="lg:text-sm text-[12px] font-medium text-gray-900">Mon Profil</span>
+              </div>
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40" align="start">
@@ -552,8 +547,6 @@ export default function Sidebar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-     
-
       </header>
 
       {/* ✅ Sidebar en mode desktop (toujours affiché) */}

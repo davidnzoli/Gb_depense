@@ -110,8 +110,10 @@ export default function ListeDepenses() {
                 onKeyDown={(e) => e.key === "Enter" && applyFilter()}
               />
             </div>
-            <div className="flex lg:items-center items-start gap-2 justify-start
-            ">
+            <div
+              className="flex lg:items-center items-start gap-2 justify-start
+            "
+            >
               <Button
                 className="bg-green-950 cursor-pointer flex items-center"
                 onClick={applyFilter}
